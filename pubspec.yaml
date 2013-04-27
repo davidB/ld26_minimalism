@@ -1,0 +1,8 @@
+name: ld48
+version: 0.1.0
+author: David Bernard
+description: A minimaliste game for Ludum Dare 48 (compo 26)
+dependencies:
+  js: any
+  browser: any
+  web_ui: any
