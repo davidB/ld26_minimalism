@@ -40,21 +40,20 @@ body {
 }
 .player {
   position: absolute;
-  width:1em;
-  height: 1em;
+  transition: left 1s ease-out;
 }
 #player1 {
   left: 0%;
   z-index: 10;
 }
 
-#playerFastest {
-  left: 50%;
+#pFastest {
+  left: 0%;
   z-index: 9;
 }
 
-#playerSlowest {
-  left: 50%;
+#pSlowest {
+  left: 0%;
   z-index: 8;
 }
 #abbrevs {
@@ -67,6 +66,6 @@ body {
   z-index: -1;
 }
 .abbrev {
-  float : left;
-  padding: 0.2em;
+  position: absolute;
+  transition: left 1s ease-out, top 1s ease-out;
 }

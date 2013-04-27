@@ -2,6 +2,7 @@ library ld48;
 
 import "dart:math" as math;
 import "dart:html";
+import "dart:crypto";
 
 class Abbrev {
   final String short;
@@ -10,6 +11,7 @@ class Abbrev {
   Abbrev(this.short, this.long, this.nbOccurences);
 
   get score => long.length * nbOccurences;
+  get id => CryptoUtils.bytesToHex(short.codeUnits);
 
   static int compareScore(Abbrev a, Abbrev b) {
     if (b.score > a.score) return 1;
@@ -26,6 +28,8 @@ class Abbrevs {
     }
     return b;
   }
+
+  //https://raw.github.com/wiki/davidB/ld48_minimalism/cat_test.md
 }
 
 class AbbrevsSelection {
