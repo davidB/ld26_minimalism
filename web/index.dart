@@ -41,10 +41,15 @@ bool tryAbbrev([String k]) {
   player1.step(a);
   pFastest.stepNext();
   pSlowest.stepNext();
-  var railsW = toPixel(query("#rails").getComputedStyle().width);
+  var railsW = toPixel(query("#rails").getComputedStyle('').width);
   player1.positionLeft(railsW);
   pFastest.positionLeft(railsW);
   pSlowest.positionLeft(railsW);
+  if (a != null) {
+    queryAll(".abb_${a.id}").forEach((el){
+      el.style.display = "none";
+    });
+  }
   //query("#${pFastest.id}").style.left = pFastest.percent;
   //query("#${pSlowest.id}").style.left = pSlowest.percent;
   return false;
@@ -57,6 +62,14 @@ reset() {
   var sortedSelected = abbrevs.selected.toList(growable: false)..sort(Abbrev.compareScore);
 
   print("ll ${sortedSelected.length}");
+  // should take care of the width and height of sequence
+  new Timer(const Duration(milliseconds:500), (){
+    var r = new math.Random();
+    query("#abbrevs").children.forEach((abbrevEl){
+      abbrevEl.style.top = "${r.nextDouble() * 90 + 10}%";
+      abbrevEl.style.left = "${r.nextDouble() * 90}%";
+    });
+  });
 
   player1.reset(total);
 

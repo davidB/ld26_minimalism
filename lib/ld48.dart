@@ -93,7 +93,7 @@ class Player {
 
   Player(this.id) {
     el = query("#${id}");
-    elW = toPixel(el.query("object").getComputedStyle().width);
+    elW = toPixel(el.query("object").getComputedStyle('').width);
     reset(1);
   }
 

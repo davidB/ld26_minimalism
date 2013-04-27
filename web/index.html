@@ -29,7 +29,7 @@
       </div>
     </div>
     <div id="abbrevs">
-      <div template repeat='abbrev in abbrevs.selected2' class="abbrev abb_{{abbrev.id}}" style="top:50%; left:50%">{{abbrev.long}}</div>
+      <div template repeat='abbrev in abbrevs.selected2' class="abbrev {{'abb_' + abbrev.id}}" style="top:50%; left:50%">{{abbrev.long}}</div>
     </div>
     <script type="application/dart" src="index.dart"></script>
     <script src="packages/browser/dart.js"></script>
