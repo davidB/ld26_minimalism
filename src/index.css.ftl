@@ -3,6 +3,7 @@
 <#nested p>
 </#list>
 </#macro>
+/*-------------------- TOOLBAR -----------------------------------------------*/
 /* Icons @import url(http://weloveiconfonts.com/api/?family=fontawesome|fontelico|zocial); */
 
 /* fontawesome */
@@ -19,6 +20,23 @@
 [class*="zocial-"]:before {
   font-family: 'zocial', sans-serif;
 }
+.navbar label {
+  display: inline-block;
+  width: 2em;
+  text-align: center;
+}
+.navbar input[type="range"]{
+  <@aprefixes ; x>${x}appearance:none;</@aprefixes>
+  width:130px; height:1px
+;}
+<@aprefixes ; x>
+.navbar input::${x}slider-thumb{
+  ${x}appearance:none;
+  width:12px; height:12px;
+  ${x}border-radius:12px;
+  background-image:${x}gradient(linear, left top, left bottom, color-stop(0, #fefefe), color-stop(0.49, #dddddd), color-stop(0.51, #d1d1d1), color-stop(1, #a1a1a1) );
+}
+</@aprefixes>
 /*-------------------- RESULT ------------------------------------------------*/
 table.stats {
   width: 100%;

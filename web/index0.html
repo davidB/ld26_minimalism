@@ -44,6 +44,15 @@
             </li>
           </ul>
           <ul class="nav pull-right">
+            <li class="dropdown" is="x-dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fontawesome-volume-up"></span><b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                 <li><label for="mute"><span class="fontawesome-volume-off" title="mute"></span></label> <input type="checkbox" id="mute" bind-checked="masterMute"/></li>
+                 <li><label for="masterVolume"><span class="fontawesome-volume-down" title="master (all)"></span></label><input id="masterVolume" min="0" max="1" step="0.1" type="range" class="volumemeter" bind-value="masterVolume"/></li>
+                 <li><label for="musicVolume"><span class="fontawesome-music" title="music"></span></label><input id="musicVolume" min="0" max="1" step="0.1" type="range" class="volumemeter" bind-value="musicVolume"/></li>
+                 <li><label for="sourceVolume"><span class="fontawesome-bell" title="effects"></span></label><input id="sourceVolume" min="0" max="1" step="0.1" type="range" class="volumemeter" bind-value="sourceVolume"/><li>
+              </ul>
+            </li>
             <li class="divider-vertical"></li>
             <li><a href="http://github.com/davidB/vdrones" title="Ludum Dare 48 entry" onClick="_gaq.push(['_trackEvent', 'community', 'ld48']);"><span class="fontawesome-comments"></span></a></li>
             <li class="divider-vertical"></li>
