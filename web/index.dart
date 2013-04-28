@@ -44,6 +44,7 @@ void main() {
     reset();
   //});
 }
+var rHide = new math.Random();
 //TODO make testcase (with random generator of k : ala QuickCheck)
 bool tryAbbrev([String k]) {
   if (k == null) k = abbrev;
@@ -57,8 +58,9 @@ bool tryAbbrev([String k]) {
   pFastest.positionLeft(railsW);
   pSlowest.positionLeft(railsW);
   if (a != null) {
-    queryAll(".abb_${a.id}").forEach((el){
-      el.style.display = "none";
+    queryAll(".abb_${a.id}").forEach((Element abbrevEl){
+      abbrevEl.classes.remove("show0");
+      abbrevEl.classes.add("hide${rHide.nextInt(6)}");
     });
   }
   lastStepText = (a == null)? "not found = +0":"'${a.long}' x ${a.nbOccurences} = +${a.score}";
@@ -79,6 +81,7 @@ reset() {
   new Timer(const Duration(milliseconds:500), (){
     var r = new math.Random();
     query("#abbrevs").children.forEach((abbrevEl){
+      abbrevEl.classes.add("show0");
       abbrevEl.style.top = "${r.nextDouble() * 90}%";
       abbrevEl.style.left = "${r.nextDouble() * 90}%";
     });
