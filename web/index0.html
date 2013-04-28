@@ -16,19 +16,56 @@
     <link rel="stylesheet" href="http://weloveiconfonts.com/api/?family=fontawesome">
   </head>
 <body>
+  <header>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container" style="width: auto;">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-exchange"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <!--a class="brand" href="#">Project name</a-->
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li>category:
+              <select name="category" template iterate="c in categories" bind-value="category">
+                <option selected="{{category == c}}">{{c}}</option>
+              </select>
+            </li>
+            <li>level :
+              <select name="level" template iterate="l in levels" bind-value="level">
+                <option selected="{{level == l}}">{{l}}</option>
+              </select>
+            </li>
+          </ul>
+          <ul class="nav pull-right">
+            <li class="divider-vertical"></li>
+            <li><a href="http://github.com/davidB/vdrones" title="Ludum Dare 48 entry" onClick="_gaq.push(['_trackEvent', 'community', 'ld48']);"><span class="fontawesome-comments"></span></a></li>
+            <li class="divider-vertical"></li>
+            <li><a href="http://github.com/davidB/ld48_minimalism" target="_blank" onClick="_gaq.push(['_trackEvent', 'community', 'info', 'gihub']);"><span class="fontawesome-github" ></span></a></li>
+        </ul>
+        </div><!-- /.nav-collapse -->
+      </div>
+    </div><!-- /navbar-inner -->
+  </div><!-- /navbar -->
+  </header>
+
     <form onSubmit="return false;" class="form-search" id="search">
       <p>Find Abbreviations or Acronyms to finish !</p>
       <input type="text" bind-value="abbrev" placeholder="abbreviation or acronym (eg: {{abbrevSample}} )" class="input-medium search-query"/>
       <button type="submit" class="btn" on-click="tryAbbrev()">Search</button>
       <div style="text-align: center">{{lastStepText}}</div>
     </form>
+
     <div id="rails">
-      <div id="pSlowest" class="player"><object data="botS.svg" type="image/svg+xml"></object><div class="name" style="opacity:0.8">Bot0</div></div>
-      <div id="pFastest" class="player"><object data="botF.svg" type="image/svg+xml"></object><div class="name" style="opacity:0.8">Bot100</div></div>
-      <div id="player1" class="player"><object data="player1.svg" type="image/svg+xml"></object><div class="name">Player</div></div>
+      <div id="pSlowest" class="player"><object data="botS.svg" type="image/svg+xml"></object><div class="name" style="opacity:0.8">Bot0<br><sub>{{scSlowest}}</sub></div></div>
+      <div id="pFastest" class="player"><object data="botF.svg" type="image/svg+xml"></object><div class="name" style="opacity:0.8">Bot100<br><sub>{{scFastest}}</sub></div></div>
+      <div id="player1" class="player"><object data="player1.svg" type="image/svg+xml"></object><div class="name">Player<br><sub>{{scPlayer}}</sub></div></div>
     </div>
+
     <div id="abbrevs">
-      <div template repeat='abbrev in abbrevs.selected2' class="abbrev {{'abb_' + abbrev.id}}" style="top:50%; left:50%">{{abbrev.long}}</div>
+      <div template repeat='abbrev in abbrevsSelected' class="abbrev {{'abb_' + abbrev.id}}" style="top:50%; left:50%">{{abbrev.long}}</div>
     </div>
     <script type="application/dart" src="index.dart"></script>
     <script src="packages/browser/dart.js"></script>

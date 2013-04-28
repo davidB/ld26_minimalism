@@ -4,8 +4,10 @@ import 'dart:async';
 import 'package:web_ui/web_ui.dart';
 import 'package:ld48/ld48.dart';
 
-@observable
 var abbrevs = new AbbrevsSelection();
+
+@observable
+var abbrevsSelected = new List();
 
 @observable
 var abbrev = "";
@@ -16,7 +18,15 @@ var abbrevSample = "";
 @observable
 var lastStepText = "";
 
-var scope = 2/3;
+@observable
+var scSlowest = 0;
+
+@observable
+var scFastest = 0;
+
+@observable
+var scPlayer = 0;
+
 var sortedSelected = null;
 
 var player1;
@@ -25,17 +35,29 @@ var pFastest;
 
 var pSlowest;
 
+@observable
+var levels = ["1","2","3","4","5","6","7","8","9","10"];
+@observable
+get level => _level.toString();
+@observable
+set level(String s) {window.location.hash = "/a/${category}/${s}";}
+var _level = 1;
+
 var rHide = new math.Random();
 
 var _bonusPlayed = -1;
 var _bonusTimer = null;
 
 @observable
-get score {
-  if (player1 == null) return 0;
-  while (!pSlowest.isFinished && !pFastest.isFinished){
-    tryAbbrev('');
-  }
+var categories = ['smiley', 'gaming', 'forum', 'chat' ];
+@observable
+get category => _category;
+@observable
+set category(String s) {window.location.hash = "/a/${s}/${level}";}
+var _category = "";
+var _abbrevsOfCategory = new Future.value(new List());
+
+get scoreR {
   return math.max(0, pSlowest.nbStep - player1.nbStep) * 100 /math.max(1, pFastest.nbStep - pSlowest.nbStep);
 }
 /**
@@ -49,8 +71,30 @@ void main() {
     player1 = new Player("player1");
     pFastest = new PlayerIA("pFastest");
     pSlowest = new PlayerIA("pSlowest");
-    reset();
+    _setupRoutes();
   //});
+}
+void _setupRoutes() {
+  Window.hashChangeEvent.forTarget(window).listen((e) {
+    _route(window.location.hash);
+  });
+  _route(window.location.hash);
+}
+
+void _route(String hash) {
+  RegExp exp = new RegExp(r"#/a/(\w+)/(\d+)");
+  var m = exp.firstMatch(hash);
+  if (m != null) {
+    var cat = m.group(1);
+    _level = math.min(10, math.max(1, int.parse(m.group(2))));
+    if (cat != category) {
+      category = cat;
+      _abbrevsOfCategory = Abbrevs.generateFromCategoryPage(cat);
+    }
+    _reset();
+  } else {
+    window.location.hash = '/a/${categories[0]}/${levels[0]}';
+  }
 }
 //TODO make testcase (with random generator of k : ala QuickCheck)
 bool tryAbbrev() {
@@ -60,22 +104,22 @@ bool tryAbbrev() {
     a = abbrevs.abbrevBonus;
     _bonusPlayed = 1;
   }
-  player1.step(a);
-  pFastest.stepNext();
-  pSlowest.stepNext();
+  scPlayer = player1.step(a);
+  scFastest = pFastest.stepNext();
+  scSlowest = pSlowest.stepNext();
   var railsW = toWPixel(query("#rails"));
   player1.positionLeft(railsW);
   pFastest.positionLeft(railsW);
   pSlowest.positionLeft(railsW);
   if (a != null) {
-    abbrev = '';
     queryAll(".abb_${a.id}").forEach((Element abbrevEl){
       abbrevEl.classes.remove("show0");
       abbrevEl.classes.add("hide${rHide.nextInt(6)}");
     });
   }
-  lastStepText = (a == null)? "not found = +0":"'${a.long}' x ${a.nbOccurences} = +${a.score}";
-  if (player1.isFinished) finish();
+  lastStepText = (a == null)? "'${abbrev}' not found = +0":"'${a.long}' x ${a.nbOccurences} = +${a.score}";
+  abbrev = '';
+  if (player1.isFinished) _finish();
   return false;
 }
 
@@ -92,10 +136,14 @@ playBonus() {
   el.classes.add("playBonus");
 }
 
-reset() {
+_reset() {
   abbrev = "";
-  abbrevs.selectFrom(Abbrevs.generateTestSL(50));
-  var total = abbrevs.selected.fold(0, (acc, a) => acc += a.score) * scope;
+  _abbrevsOfCategory.then(_reset0);
+}
+
+_reset0(l) {
+  abbrevs.selectFrom(l, ratio: _level/10);
+  var total = abbrevs.selected.fold(0, (acc, a) => acc += a.score);
   var sortedSelected = abbrevs.selected.toList(growable: false)..sort(Abbrev.compareScore);
   abbrevSample = sortedSelected.isEmpty ? '' : sortedSelected[0].short;
   _bonusPlayed = -1;
@@ -103,7 +151,7 @@ reset() {
     _bonusTimer.cancel();
     _bonusTimer = null;
   }
-
+  abbrevsSelected = abbrevs.selected2;
   // should take care of the width and height of sequence
   new Timer(const Duration(milliseconds:500), (){
     var r = new math.Random();
@@ -138,7 +186,7 @@ reset() {
   pSlowest.positionLeft(railsW);
 }
 
-finish() {
+_finish() {
   print("FINISH");
   if (_bonusTimer != null){
     _bonusTimer.cancel();

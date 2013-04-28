@@ -3,6 +3,7 @@ library ld48;
 import "dart:math" as math;
 import "dart:html";
 import "dart:crypto";
+import "dart:async";
 
 class Abbrev {
   final String short;
@@ -21,7 +22,7 @@ class Abbrev {
 }
 
 class Abbrevs {
-  static List<Abbrev> generateTestSL(int nb)  {
+  static Iterable<Abbrev> generateTestSL(int nb)  {
     var b  = new List<Abbrev>(nb);
     for (var i = 0; i < nb; i++) {
       b[i] = new Abbrev("s${i}", "long${i}", 1);
@@ -30,9 +31,21 @@ class Abbrevs {
   }
 
   //https://raw.github.com/wiki/davidB/ld48_minimalism/cat_test.md
-  static List<Abbrev> generateFromCSV(String s)  {
-    var b  = new List<Abbrev>();
-    return b;
+  static Iterable<Abbrev> generateFromString(String s) {
+    RegExp exp = new RegExp(r"^\s*(\S+)\s+(.*)\s*$", multiLine:true);
+    Iterable<Match> matches = exp.allMatches(s);
+    return matches.map((x) => new Abbrev(x.group(1), x.group(2), 1)).toList();
+  }
+
+  static Future<Iterable<Abbrev>> generateFromCategoryPage(String categoryName) {
+    var regExp = new RegExp(r"^\s*(\w+)");
+    var m = regExp.firstMatch(categoryName);
+    if (m == null) {
+      return new Future.error(new ArgumentError("categoryName should match ${regExp.pattern} : '${categoryName}'"));
+    }
+    return HttpRequest.request("cat_${m.group(1)}.txt").then((req){
+      return generateFromString(req.responseText);
+    });
   }
 }
 
@@ -50,7 +63,7 @@ class AbbrevsSelection {
     _abbrevs.clear();
   }
 
-  Abbrev tryAbbrev(String k) => _abbrevs.remove(k);
+  Abbrev tryAbbrev(String k) => _abbrevs.remove(k.toLowerCase());
 
   //TODO improve shuffle
   void selectFrom(List<Abbrev> l, {num ratio : 0.8, int maxOccurences : 3}) {
@@ -61,7 +74,7 @@ class AbbrevsSelection {
     var nb = ((l.length - 1).toDouble() * ratio);
     for (var i = nb.toInt(); i > 0; i--) {
       var a = l[i];
-      _abbrevs[a.short] = new Abbrev(a.short, a.long, 1 + r.nextInt(maxOccurences));
+      _abbrevs[a.short.toLowerCase()] = new Abbrev(a.short, a.long, 1 + r.nextInt(maxOccurences));
     }
     _abbrevBonus = new Abbrev(l[0].short, l[0].long, maxOccurences + 3);
   }
@@ -126,8 +139,8 @@ class Player {
   //@observable
   get lastStepText => _lastStepText;
 
-  bool step(Abbrev a) {
-    if (isFinished) return false;
+  int step(Abbrev a) {
+    if (isFinished) return _progression;
     _nbStep++;
     if (a == null) {
       _lastStepText = " !! :-( !! ";
@@ -140,7 +153,7 @@ class Player {
     if (isFinished) {
       _lastStepText = "HOURRA !";
     }
-    return true;
+    return _progression;
   }
 
   positionLeft(double railsW) {
@@ -168,11 +181,12 @@ class PlayerIA extends Player {
 
   PlayerIA(id): super(id);
 
-  void stepNext() {
+  int stepNext() {
     if (_idx < sequence.length) {
       step(sequence[_idx]);
       _idx++;
     }
+    return _progression;
   }
 
   void reset(total) {

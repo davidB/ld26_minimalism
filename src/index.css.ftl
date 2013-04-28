@@ -3,6 +3,22 @@
 <#nested p>
 </#list>
 </#macro>
+/* Icons @import url(http://weloveiconfonts.com/api/?family=fontawesome|fontelico|zocial); */
+
+/* fontawesome */
+[class*="fontawesome-"]:before {
+  font-family: 'FontAwesome', sans-serif;
+}
+
+/* fontelico */
+[class*="fontelico-"]:before {
+  font-family: 'fontelico', sans-serif;
+}
+
+/* zocial */
+[class*="zocial-"]:before {
+  font-family: 'zocial', sans-serif;
+}
 /*-------------------- FORMS -------------------------------------------------*/
 #search {
   background: rgba(240, 250, 250, 0.6);
