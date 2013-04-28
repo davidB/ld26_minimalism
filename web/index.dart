@@ -38,10 +38,7 @@ var pSlowest;
 @observable
 var levels = ["1","2","3","4","5","6","7","8","9","10"];
 @observable
-get level => _level.toString();
-@observable
-set level(String s) {window.location.hash = "/a/${category}/${s}";}
-var _level = 1;
+var level = 1;
 
 var rHide = new math.Random();
 
@@ -51,15 +48,12 @@ var _bonusTimer = null;
 @observable
 var categories = ['smiley', 'gaming', 'forum', 'chat' ];
 @observable
-get category => _category;
-@observable
-set category(String s) {window.location.hash = "/a/${s}/${level}";}
-var _category = "";
+var category = "";
 var _abbrevsOfCategory = new Future.value(new List());
 
-get scoreR {
-  return math.max(0, pSlowest.nbStep - player1.nbStep) * 100 /math.max(1, pFastest.nbStep - pSlowest.nbStep);
-}
+//get scoreR {
+//  return math.max(0, pSlowest.nbStep - player1.nbStep) * 100 /math.max(1, pFastest.nbStep - pSlowest.nbStep);
+//}
 /**
  * Learn about the Web UI package by visiting
  * http://www.dartlang.org/articles/dart-web-components/.
@@ -86,12 +80,12 @@ void _route(String hash) {
   var m = exp.firstMatch(hash);
   if (m != null) {
     var cat = m.group(1);
-    _level = math.min(10, math.max(1, int.parse(m.group(2))));
+    level = math.min(10, math.max(1, int.parse(m.group(2))));
     if (cat != category) {
       category = cat;
       _abbrevsOfCategory = Abbrevs.generateFromCategoryPage(cat);
     }
-    _reset();
+    reset();
   } else {
     window.location.hash = '/a/${categories[0]}/${levels[0]}';
   }
@@ -104,9 +98,9 @@ bool tryAbbrev() {
     a = abbrevs.abbrevBonus;
     _bonusPlayed = 1;
   }
-  scPlayer = player1.step(a);
-  scFastest = pFastest.stepNext();
-  scSlowest = pSlowest.stepNext();
+  scPlayer = player1.step(a).toInt();
+  scFastest = pFastest.stepNext().toInt();
+  scSlowest = pSlowest.stepNext().toInt();
   var railsW = toWPixel(query("#rails"));
   player1.positionLeft(railsW);
   pFastest.positionLeft(railsW);
@@ -119,7 +113,7 @@ bool tryAbbrev() {
   }
   lastStepText = (a == null)? "'${abbrev}' not found = +0":"'${a.long}' x ${a.nbOccurences} = +${a.score}";
   abbrev = '';
-  if (player1.isFinished) _finish();
+  if (player1.isFinished || pFastest.isFinished || pSlowest.isFinished) _finish();
   return false;
 }
 
@@ -136,14 +130,14 @@ playBonus() {
   el.classes.add("playBonus");
 }
 
-_reset() {
+reset() {
   abbrev = "";
   _abbrevsOfCategory.then(_reset0);
 }
 
 _reset0(l) {
-  abbrevs.selectFrom(l, ratio: _level/10);
-  var total = abbrevs.selected.fold(0, (acc, a) => acc += a.score);
+  abbrevs.selectFrom(l, ratio: level/10);
+  var total = abbrevs.selected.fold(0, (acc, a) => acc += a.score) * 0.75;
   var sortedSelected = abbrevs.selected.toList(growable: false)..sort(Abbrev.compareScore);
   abbrevSample = sortedSelected.isEmpty ? '' : sortedSelected[0].short;
   _bonusPlayed = -1;
@@ -188,6 +182,9 @@ _reset0(l) {
 
 _finish() {
   print("FINISH");
+  var el = query('#runresult_dialog');
+  el.style.visibility = "visible";
+  el.xtag.show();
   if (_bonusTimer != null){
     _bonusTimer.cancel();
     _bonusTimer = null;

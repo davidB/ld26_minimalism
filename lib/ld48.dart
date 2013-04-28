@@ -139,7 +139,7 @@ class Player {
   //@observable
   get lastStepText => _lastStepText;
 
-  int step(Abbrev a) {
+  num step(Abbrev a) {
     if (isFinished) return _progression;
     _nbStep++;
     if (a == null) {
@@ -181,7 +181,7 @@ class PlayerIA extends Player {
 
   PlayerIA(id): super(id);
 
-  int stepNext() {
+  num stepNext() {
     if (_idx < sequence.length) {
       step(sequence[_idx]);
       _idx++;

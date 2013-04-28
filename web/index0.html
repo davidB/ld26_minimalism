@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <link type="text/plain" rel="author" href="humans.txt" />
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"/>
+    <link rel="import" href="_widgets/xmodal.html">
+    <link rel="import" href="_widgets/xdropdown.html">
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -28,15 +30,17 @@
         <!--a class="brand" href="#">Project name</a-->
         <div class="nav-collapse">
           <ul class="nav">
-            <li>category:
-              <select name="category" template iterate="c in categories" bind-value="category">
-                <option selected="{{category == c}}">{{c}}</option>
-              </select>
+            <li class="dropdown" is="x-dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Category {{category}}<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li template iterate="c in categories"><a href="{{'#/a/${c}/${level}'}}">{{c}}</a></li>
+              </ul>
             </li>
-            <li>level :
-              <select name="level" template iterate="l in levels" bind-value="level">
-                <option selected="{{level == l}}">{{l}}</option>
-              </select>
+            <li class="dropdown" is="x-dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Level {{level}}<b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li template iterate="l in levels"><a href="{{'#/a/${category}/${l}'}}">{{l}}</a></li>
+              </ul>
             </li>
           </ul>
           <ul class="nav pull-right">
@@ -66,6 +70,33 @@
 
     <div id="abbrevs">
       <div template repeat='abbrev in abbrevsSelected' class="abbrev {{'abb_' + abbrev.id}}" style="top:50%; left:50%">{{abbrev.long}}</div>
+    </div>
+    <div is="x-modal" id="runresult_dialog" style="visibility:hidden">
+    <div class="modal-body">
+      <table class="stats">
+        <tbody>
+          <tr>
+            <th>Category</th>
+            <td>{{category}} ({{level}})</td>
+          </tr>
+          <tr>
+            <th>Score</th>
+            <td style="font-size:200%">{{scPlayer}}</td>
+          </tr>
+          <!--tr>
+            <th>Bot0</th>
+            <td>{{scSlowest}}</td>
+          </tr>
+          <tr>
+            <th>Bot100</th>
+            <td>{{scFastest}}</td>
+          </tr-->
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <button on-click="reset()" class="btn btn-primary" data-dismiss="modal" tabindex="-1"><i class="icon-repeat"></i> Replay</button>
+    </div>
     </div>
     <script type="application/dart" src="index.dart"></script>
     <script src="packages/browser/dart.js"></script>

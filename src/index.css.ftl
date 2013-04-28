@@ -19,6 +19,20 @@
 [class*="zocial-"]:before {
   font-family: 'zocial', sans-serif;
 }
+/*-------------------- RESULT ------------------------------------------------*/
+table.stats {
+  width: 100%;
+}
+table.stats th {
+  text-align: left;
+}
+table.stats td {
+  text-align: right;
+}
+/* HACK to hide modal during loading of the page, and code */
+x-modal {
+  display: none;
+}
 /*-------------------- FORMS -------------------------------------------------*/
 #search {
   background: rgba(240, 250, 250, 0.6);
