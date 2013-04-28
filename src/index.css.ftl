@@ -1,3 +1,8 @@
+<#macro aprefixes>
+<#list [ "-moz-", "-webkit-", "-ms-", "-o-", ""] as p>
+<#nested p>
+</#list>
+</#macro>
 /*-------------------- FORMS -------------------------------------------------*/
 #search {
   background: rgba(240, 250, 250, 0.6);
@@ -32,9 +37,8 @@
 }
 .player {
   position: absolute;
-  -webkit-transition: left 1s ease-out;
-  -moz-transition: left 1s ease-out;
-  transition: left 1s ease-out;
+  <@aprefixes ; x>${x}transition: left 1s ease-out;
+  </@aprefixes>
 }
 #player1 {
   left: 0%;
@@ -78,13 +82,12 @@
 }
 
 div.playBonus {
-  -webkit-animation: playBonus 7s;
-  -moz-animation: playBonus 7s;
-  animation: playBonus 7s;
+  <@aprefixes ; x>${x}animation: playBonus 7s;
+  </@aprefixes>
   visibility: hidden;
 }
-
-@-webkit-keyframes playBonus{
+<@aprefixes ; x>
+@${x}keyframes playBonus{
   0%,100% {
     visibility:visible;
     opacity:0.3;
@@ -94,287 +97,87 @@ div.playBonus {
     opacity:1.0;
   }
   50% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: translate(-1000px, 0px);
+    ${x}animation-timing-function: ease-out;
+    ${x}transform: translate(-1000px, 0px);
     visibility:visible;
     opacity:1.0;
   }
 }
-@-moz-keyframes playBonus{
-  0%,100% {
-    visibility:visible;
-    opacity:0.3;
-  }
-  25%,75% {
-    visibility:visible;
-    opacity:1.0;
-  }
-  50% {
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: translate(-1000px, 0px);
-    visibility:visible;
-    opacity:1.0;
-  }
-}
+</@aprefixes>
 
 .show0 {
   /*
-  -webkit-transition: -webkit-transform 1s ease-out;
-  -moz-transition: -moz-transform 1s ease-out;
-  transition: transform 1s ease-out;
+  <@aprefixes ; x>${x}transition: ${x}transform 1s ease-out;</@aprefixes>
   */
   -webkit-transition: top 1s ease-out, left 1s ease-out;
   -moz-transition: top 1s ease-out, left 1s ease-out;
   transition: top 1s ease-out, left 1s ease-out;
+  <@aprefixes ; x>${x}transition: top 1s ease-out, left 1s ease-out;</@aprefixes>
 }
 
-.hide0 {
-  -webkit-animation: hide0 1s;
-  -moz-animation: hide0 1s;
-  animation: hide0 1s;
+<#macro hide n>
+.hide${n} {
+	<@aprefixes ; x>${x}animation: hide${n} 1s;</@aprefixes>
   visibility: hidden;
 }
-@keyframes hide0{
+<@aprefixes ; x>
+@${x}keyframes hide${n}{
   0% {
-    animation-timing-function: ease-out;
-    transform: scale(1);
+    ${x}animation-timing-function: ease-out;
+    ${x}transform: scale(1);
     opacity: 1;
     visibility:visible;
   }
   20% {
-    animation-timing-function: ease-out;
-    transform: scale(2);
+    ${x}animation-timing-function: ease-out;
+    ${x}transform: scale(2);
     color: #333333;
     opacity: 1;
   }
-  100% {
-    animation-timing-function: ease-out;
-    transform: scale(8);
+  <#nested x>
+}
+</@aprefixes>
+</#macro>
+<@hide n="0" ; x>
+	100% {
+    ${x}animation-timing-function: ease-out;
+    ${x}transform: scale(8);
     opacity: 0.05;
   }
-}
-@-webkit-keyframes hide0{
-  0% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(1);
-    opacity: 1;
-    visibility:visible;
-  }
-  20% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(2);
-    color: #333333;
-    opacity: 1;
-  }
-  100% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(8);
-    opacity: 0.05;
-  }
-}
-@-moz-keyframes hide0{
-  0% {
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(1);
-    opacity: 1;
-    visibility:visible;
-  }
-  20% {
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(2);
-    color: #333333;
-    opacity: 1;
-  }
-  100% {
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(8);
-    opacity: 0.05;
-  }
-}
+</@hide>
 
-.hide1 {
-  -webkit-animation: hide1 1s;
-  -moz-animation: hide1 1s;
-  animation: hide1 1s;
-  visibility: hidden;
-}
-@-webkit-keyframes hide1{
-  0% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(1);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(1);
-    animation-timing-function: ease-out;
-    transform: scale(1);
-    opacity: 1;
-    visibility:visible;
-  }
-  20% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(2);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(2);
-    animation-timing-function: ease-out;
-    transform: scale(2);
-    color: #333333;
-    opacity: 1;
-  }
+<@hide n="1" ; x>
   100% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(2);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(2);
-    animation-timing-function: ease-out;
-    transform: scale(2);
+    ${x}animation-timing-function: ease-out;
+    ${x}transform: scale(2);
     top: 1%;
   }
-}
+</@hide>
 
-.hide2 {
-  -webkit-animation: hide2 1s;
-  -moz-animation: hide2 1s;
-  animation: hide2 1s;
-  visibility: hidden;
-}
-@-webkit-keyframes hide2{
-  0% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(1);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(1);
-    animation-timing-function: ease-out;
-    transform: scale(1);
-    opacity: 1;
-    visibility:visible;
-  }
-  20% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(2);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(2);
-    animation-timing-function: ease-out;
-    transform: scale(2);
-    color: #333333;
-    opacity: 1;
-  }
+<@hide n="2" ; x>
   100% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(2);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(2);
-    animation-timing-function: ease-out;
-    transform: scale(2);
+    ${x}animation-timing-function: ease-out;
+    ${x}transform: scale(2);
     top: 90%;
   }
-}
-
-.hide3 {
-  -webkit-animation: hide3 1s;
-  -moz-animation: hide3 1s;
-  animation: hide3 1s;
-  visibility: hidden;
-}
-@-webkit-keyframes hide3{
-  0% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(1);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(1);
-    animation-timing-function: ease-out;
-    transform: scale(1);
-    opacity: 1;
-    visibility:visible;
-  }
-  20% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(2);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(2);
-    animation-timing-function: ease-out;
-    transform: scale(2);
-    color: #333333;
-    opacity: 1;
-  }
+</@hide>
+<@hide n="3" ; x>
   100% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(2);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(2);
-    animation-timing-function: ease-out;
-    transform: scale(2);
-    left: 0%;
+    ${x}animation-timing-function: ease-out;
+    ${x}transform: scale(2);
+    left: 1%;
   }
-}
-.hide4 {
-  -webkit-animation: hide4 1s;
-  -moz-animation: hide4 1s;
-  animation: hide4 1s;
-  visibility: hidden;
-}
-@-webkit-keyframes hide4{
-  0% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(1);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(1);
-    animation-timing-function: ease-out;
-    transform: scale(1);
-    opacity: 1;
-    visibility:visible;
-  }
-  20% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(2);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(2);
-    animation-timing-function: ease-out;
-    transform: scale(2);
-    color: #333333;
-    opacity: 1;
-  }
+</@hide>
+<@hide n="4" ; x>
   100% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(2);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(2);
-    animation-timing-function: ease-out;
-    transform: scale(2);
+    ${x}animation-timing-function: ease-out;
+    ${x}transform: scale(2);
     left: 90%;
   }
-}
-.hide5 {
-  -webkit-animation: hide5 1s;
-  -moz-animation: hide5 1s;
-  animation: hide5 1s;
-  visibility: hidden;
-}
-@-webkit-keyframes hide5{
-  0% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(1);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(1);
-    animation-timing-function: ease-out;
-    transform: scale(1);
-    opacity: 1;
-    visibility:visible;
-  }
-  20% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(2);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(2);
-    animation-timing-function: ease-out;
-    transform: scale(2);
-    color: #333333;
-    opacity: 1;
-  }
+</@hide>
+<@hide n="5" ; x>
   100% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scaleX(20);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scaleX(20);
-    animation-timing-function: ease-out;
-    transform: scaleX(20);
+    ${x}animation-timing-function: ease-out;
+    ${x}transform: scaleX(20);
   }
-}
+</@hide>
