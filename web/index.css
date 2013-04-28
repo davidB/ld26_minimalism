@@ -46,16 +46,15 @@ body {
   left: 0%;
   z-index: 10;
 }
-
-#pFastest {
+#pSlowest {
   left: 0%;
   z-index: 9;
 }
-
-#pSlowest {
+#pFastest {
   left: 0%;
   z-index: 8;
 }
+
 #abbrevs {
   position: absolute;
   top: 10px;
@@ -68,4 +67,12 @@ body {
 .abbrev {
   position: absolute;
   transition: left 1s ease-out, top 1s ease-out;
+}
+
+.name {
+  background-color: rgb(250, 250, 250);
+  font-family: "Josefin Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+  border-top: 3px solid #ddd;
+  text-align: center;
+  font-size: 1.5em;
 }

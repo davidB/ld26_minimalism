@@ -10,6 +10,9 @@ var abbrevs = new AbbrevsSelection();
 @observable
 var abbrev = "";
 
+@observable
+var lastStepText = "";
+
 var scope = 2/3;
 var sortedSelected = null;
 
@@ -58,6 +61,7 @@ bool tryAbbrev([String k]) {
       el.style.display = "none";
     });
   }
+  lastStepText = (a == null)? "not found = +0":"'${a.long}' x ${a.nbOccurences} = +${a.score}";
   if (player1.isFinished) {
     print("score: ${score}");
   }
@@ -75,7 +79,7 @@ reset() {
   new Timer(const Duration(milliseconds:500), (){
     var r = new math.Random();
     query("#abbrevs").children.forEach((abbrevEl){
-      abbrevEl.style.top = "${r.nextDouble() * 90 + 10}%";
+      abbrevEl.style.top = "${r.nextDouble() * 90}%";
       abbrevEl.style.left = "${r.nextDouble() * 90}%";
     });
   });
