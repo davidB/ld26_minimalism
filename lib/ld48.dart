@@ -24,12 +24,10 @@ class Abbrevs {
   static List<Abbrev> generateTestSL(int nb)  {
     var b  = new List<Abbrev>(nb);
     for (var i = 0; i < nb; i++) {
-      b[i] = new Abbrev("short${i}", "long${i}", 1);
+      b[i] = new Abbrev("s${i}", "long${i}", 1);
     }
     return b;
   }
-
-  //https://raw.github.com/wiki/davidB/ld48_minimalism/cat_test.md
 }
 
 class AbbrevsSelection {
@@ -56,7 +54,6 @@ class AbbrevsSelection {
       var a = l[i];
       _abbrevs[a.short] = new Abbrev(a.short, a.long, 1 + r.nextInt(maxOccurences - 1));
     }
-    print("abbrevs.size : ${_abbrevs.length}");
   }
 
 }
@@ -67,6 +64,20 @@ double toPixel(String s) {
   }
   return 0.0;
 }
+
+double toWPixel(Element el) {
+  var b = 0.0;
+  try {
+    b = toPixel(el.getComputedStyle('').width);
+  } catch(e) {
+    try {
+      b = el.clientWidth.toDouble();
+    } catch(e) {
+    }
+  }
+  return b;
+}
+
 
 List shuffle(List l) {
   var r = new math.Random();
@@ -89,11 +100,10 @@ class Player {
   var _progression;
   var _nbStep;
   var el;
-  var elW;
+  var _elW = -1;
 
   Player(this.id) {
     el = query("#${id}");
-    elW = toPixel(el.query("object").getComputedStyle('').width);
     reset(1);
   }
 
@@ -124,7 +134,14 @@ class Player {
   }
 
   positionLeft(double railsW) {
-    el.style.left = "${(railsW - elW / 2) * ratio}px";
+    if (_elW <= 0.0) _elW = toWPixel(query("#${id} object")); //lazy
+    if (_elW <= 0.0) _elW = toWPixel(el); //lazy (workaround for FF)
+    if (railsW <= 0 || _elW <= 0) {
+      print("fallback to % ${railsW} ${_elW}");
+      el.style.left = "${ratio * 90}%";
+    } else {
+      el.style.left = "${(railsW - _elW / 2) * ratio}px";
+    }
   }
 
   void reset(total) {
