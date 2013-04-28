@@ -1,0 +1,623 @@
+10m	Ten man
+1337	Leet
+1up	Extra life
+25m	Twenty-five man
+2EZ	Too easy
+2M2H	Too much to handle
+360-noscope	360 no scope
+3arc	Treyarch
+555	Laughing
+aa	Autoattack
+Ace	Solo winner
+AD	Attack damage
+ADAM	All draft all mid
+ADC	Attack damage carry
+adds	Additional mobs
+ADS	Aiming down sight
+AE	Area of effect
+AF	Aggression factor
+AFC	Away from controller
+AFC	Away from computer
+AFK	Away from keyboard
+aggro	Aggression
+agi	Agility
+AH	Auction house
+AI	Artificial intelligence
+AI	All in
+Aimbot	Automatic aiming bot
+aipf	All in preflop
+ak	AK-47
+alt	Alternate character
+ammo	Ammunition
+AOE	Area of effect
+AOI	A** on ice
+AON	All or nothing
+AP	Attack power
+AP	Ability power
+APM	Actions per minute
+AR	Assault rifle
+ARAM	All random all mid
+arp	Armor penetration
+arpen	Armor penetration
+ARTS	Action real-time strategy
+AS	Attack speed
+ATM	At the moment
+AYBABTU	All your base are belong to us
+AYC	Are you coming?
+b/r	Bathroom
+Baller	Cool person
+BAMF	Bad a** mother f*****
+Barcraft	Bar gathering for StarCraft
+BASOR	Breathing a sigh of relief
+BB	Big blind
+bb/100	Big bets per 100 hands
+BBIAB	Be back in a bit
+BBL	Be back later
+BBOL	Be back on later
+BC	Burning Crusade
+bd	Backdoor
+Beast	Awesome person
+belf	Blood Elf
+BF	B.F. Sword
+BFG	Big friggin' gun
+BG	Bad game
+bg	Battleground
+bio	Bathroom
+Bio	Biological units
+BIO	Bring it on
+Bioball	Biological unit group
+BIS	Best in slot
+BK	Back
+bling	Baneling
+Blizz	Blizzard
+blops	Black Ops
+BM	Bad manner
+BM	Bite me
+BO	Build order
+BO3	Best of three
+BO5	Best of five
+BOE	Bind on equip
+Boomkin	Moonkin druid
+Boomstick	Doom shotgun
+Boosting	Unfair level boosting
+BOP	Bind on pickup
+Boss	Awesome person
+bot	Bottom lane
+BOT	Be on that
+boyds	Back off you dipstick
+BP	Blue pilling
+BR	Bathroom
+BR	Bank roll
+brez	Battle resurrection
+BRH	Be right here
+broom	Bathroom
+BSTS	Better safe than sorry
+bthrm	Bathroom
+BUF	Big ugly fellow
+Buff	Strengthen
+Bunnies	First-person shooter jumping
+BWL	Bursting with laughter
+Camping	Holding position
+Carry	MOBA player role
+cata	Cataclysm
+CC	Command Center
+CC	Crowd control
+CCG	Collectible card game
+cd	Cooldown
+cdr	Cooldown reduction
+char	Character
+chargelot	Charge Zealot
+Cheese	Cheap strategy
+Choob	Skilled player who intentionally plays badly
+CNRHKYITF	Chuck Norris roundhouse kick you in the face
+COD	Call of Duty
+combo	Combination
+CQC	Close quarters combat
+crit	Critical Strike
+CS	Creep score
+CTF	Capture the flag
+d/c	Disconnected
+d/l	Download
+D3	Diablo 3
+dal	Dalaran
+DBG	Don't be gay
+DBM	Deadly Boss Mods
+dc	Disconnect
+dced	Disconnected
+de	Disenchant
+deagle	Desert Eagle
+Debuff	Weakening effect
+ded	Dead
+deeps	Damage per second
+def	Defense
+dfg	Deathfire Grasp
+DFL	Dead freaking last
+DGA	Don't go anywhere
+DIAF	Die in a fire
+Ding	Level up
+disc	Discipline
+DK	Don't know
+DKP	Dragon kill points
+dl	Download
+dlc	Downloadable content
+DM	Death match
+dmg	Damage
+Domed	Headshotted
+DON	Double or nothing
+DOT	Damage over time
+DOTA	Defense of the Ancients
+DPS	Damage per second
+dq	Disqualify
+dstr8	Dang straight
+DT	Dark templar
+Dunking	Owning enemy player
+DYFI	Did you find it?
+e1	Everyone
+EA	Electronic Arts
+EAK	Eating at keyboard
+EG	Evil grin
+EI	Eat it
+Elo	Elo rating system
+EPM	Effective actions per minute
+ESAD	Eat s*** and die
+eSports	Electronic sports
+ezpz	Easy peasy
+F2P	Free to play
+Facepalm	To place the palm of your hand on your face
+Fail	Failure
+farming	Earning experience and items
+FF	Faerie fire
+FF	Focus fire
+FF	Final Fantasy
+FFA	Free for all
+FFE	Forge fast expand
+FFF	Fight for first
+FFS	For f***'s sake
+FH	F***ing Heck
+FMJ	Full metal jacket
+FOC	Free of charge
+FOS	Feat of strength
+FP	Flight point
+FPS	First-person shooter
+frag	Player kill
+FTEL	For the epic loss
+FTEW	For the epic win
+FTK	For the kill
+FTL	For the loss
+FTMFW	For the mother f***ing win
+FTW	For the win
+FUBAR	Fouled up beyond all recognition
+G1	Good one
+G2G	Gotta go
+G2GGS2D	Got to go get something to drink
+G2GP	Got to go pee
+G4I	Go for it
+GAL	Get a life
+Gamer	Video game player
+GB	Guild bank
+GBA	Gameboy Advance
+GFG	Good friggin' game
+GG	Good game
+GGA	Good game all
+GGL	Good game loser
+gglords	Broodlords
+GGP	Gotta go pee
+ggs	Good games
+Ghosting	Observing an enemy player
+gibs	Giblets
+GJ	Good job
+GJP	Good job partner
+GL	Good luck
+GL2U	Good luck to you
+GLE	Good luck everyone
+GLHF	Good luck have fun
+GM	Good move
+GM	Good match
+GM	Game master
+gm	Grandmaster
+GNE1	Good night everyone
+gnight	Good night
+gnite	Goodnight
+Gogo	Go now
+GOML	Get on my level
+Gosu	Highly skilled
+GOW	Gears of War
+GOW2	Gears of War 2
+grats	Congratulations
+gratz	Congratulations
+Grinding	Playing long hours
+grr	Anger
+GS	Gear score
+GS	Good shot
+GSL	Global StarCraft League
+GSTL	Global StarCraft Team League
+GTA	Grand Theft Auto
+GTFO	Get the f*** out
+GTFOOH	Get the f*** out of here
+GTG	Got to go
+GTG	Good to go
+HAN	How about now?
+hax	Hacks
+Haxor	Hacker
+HDYLMN	How do you like me now
+HE	Hold'em
+HF	Have fun
+hi5	High five
+HL	Half-Life
+HM	Hard mode
+HOAS	Heck of a shot
+HOF	Hall of fame
+HOIC	Hold on, I'm coming
+HON	Heroes of Newerth
+Horribad	Horribly bad
+HOT	Heal over time
+HOTS	Heart of the Swarm
+HP	Hit points
+hp5	Health per five seconds
+HPS	Heals per second
+HS	Head shot
+HT	Hi there
+Huckleberry	The one you're looking for
+HUD	Heads up display
+HYE	Have you ever
+IAP	In-app purchase
+icc	Icecrown Citadel
+idd	Indeed
+IDK	I don't know
+imba	Imbalanced
+inc	Incoming
+Instalock	Instantly choose character
+int	Intellect
+inv	Invite
+IRL	In real life
+ITRW	In the real world
+IVL	In virtual life
+jc	Jewelcrafter
+Jungler	Jungle killing player
+Jungling	Killing neutral monsters in jungle
+kara	Karazhan
+KDA	Kills deaths assists
+KDR	Kill death ratio
+kek	WoW Orcish laugh
+kek	Korean laugh
+keke	Korean laugh
+kgo	Ok, go
+KIA	Killed in action
+Kiting	Moving while avoiding attack
+KK	OK
+KMA	Kiss my a**
+KMB	Kiss my butt
+KMMFA	Kiss my mother f****** a**
+KOS	Kill on site
+KOTOR	Knights of the Old Republic
+KS	Kill steal
+ks	Kingslayer
+L2P	Learn to play
+L4D	Left for Dead
+L4D2	Left for Dead 2
+l8r	Later
+LAN	Local Area Network
+lane	MOBA map path
+Laning	Staying in a lane
+LARP	Live action role-playing
+larper	Live action role-player
+larping	Live action role-playing
+Leech	Freeloader
+LD	Ludum Dare
+LF	Looking for
+LF1M	Looking for one more
+LFG	Looking for group
+LFM	Looking for more
+LFW	Looking for work
+ling	Zergling
+LL	Later loser
+LMSO	Laughing my socks off
+LOL	Laughing out loud
+LOL	League of Legends
+LOM	Low on mana
+LOS	Line of sight
+LOTV	Legacy of the Void
+ltr	Later
+lulz	LOL
+lvl	Level
+Macro	Economy management skill
+Main	Main character
+mats	Materials
+MC	Mind Control
+MC	Minecraft
+MDPS	Melee damage per second
+mech	Mechanical units
+Metagame	Outside game preparation and strategies
+Micro	Unit micromanagement skill
+mid	Middle lane
+MLG	Major League Gaming
+MM	Make me
+MMBBG	Massively Multiplayer Browser-Based Game
+MMM	Marine, Marauder, Medivac
+MMO	Massively multiplayer online
+MMOG	Massively Multiplayer Online Game
+MMORPG	Massively multiplayer online role-playing game
+mob	Monster
+MOBA	Multiplayer online battle arena
+mod	Modification
+mod	Moderator
+MOH	Medal of Honor
+MOP	Mists of Pandaria
+MOTD	Message of the day
+mp5	Mana per five seconds
+MT	Mistype
+MTFBWY	May the Force be with you
+MUD	Multi-User Dimension
+Mule	Alternate character for storage
+mut	Mutilate
+muta	Mutalisks
+n00b	Newbie
+N1	Nice one
+N64	Nintendo 64
+Natural	Natural expansion
+nax	Naxxaramas
+naxx	Naxxaramas
+NC	Nice call
+NC	Not cool
+NCZ	No capture zone
+NDS	Nintendo DS
+Nerf	Weaken
+NES	Nintendo Entertainment System
+newb	Newbie
+NH	Nice hand
+Ninja	Loot stealer
+NJ	Nice job
+NKZ	No kill zone
+NL	No limit
+nmtn	Nevermind that now
+noob	Newbie
+nooblet	Young newbie
+nooblord	Ultimate newbie
+NP	No problem
+NP	Nice play
+NPC	Non-player character
+NS	No s***
+NS	Nice shot
+NT	Nice try
+nub	Newbie
+nuke	Nuclear missile
+nxt	Next
+OAR	On a roll
+OIC	Oh, I see
+OMD	Oh my darn!
+OMDB	Over my dead body
+OMG	Oh my gosh
+OMGYS	Oh my gosh you suck
+oneshot	One shot completion
+OOC	Out of character
+OOM	Out of mana
+OOYFM	Out of your freaking mind
+op	Overpowered
+OT	Overtime
+OTP	On the phone
+ovie	Overlord
+ownage	Completely owned
+pat	Patrol
+PAYG	Pay as you go
+PBE	Public beta environment
+PC	Personal computer
+pf	Preflop
+PF	Planetary Fortress
+PFR	Plasma, Frag, Rocket
+pfr	Preflop raise
+PK	Player Kill
+pld	Played
+plox	Please
+PMD	Pokémon Mystery Dungeon
+POC	Piece of crap
+POS	Piece of s***
+pot	Potion
+POV	Point of view
+POW	Prisoner of war
+PP	Pause please
+proc	Programmed random occurrence
+prot	Protection
+PS2	PlayStation 2
+PS3	PlayStation 3
+PSP	PlayStation Portable
+PST	Please send tell
+PTFO	Play the freaking objective
+PTIYPASI	Put that in your pipe and smoke it
+PTL	Player to left
+PTR	Public test realm
+PTR	Player to right
+PUG	Pick up group
+Pull	Enter combat
+PVC	Player versus computer
+PVE	Player versus environment
+PvP	Protoss versus Protoss
+PVP	Player versus player
+PvT	Protoss versus Terran
+PvZ	Protoss versus Zerg
+pwn	Own
+pwn3d	Owned
+pwnage	Ownage
+pwnd	Owned
+pwned	Owned
+pwnt	Owned
+Q	First champion ability
+qqn	Looking
+Ragequit	Angrily exiting
+Raid	Raid group
+Rake	Poker site commission
+rax	Barracks
+RDPS	Ranged damage per second
+rdy	Ready
+re	Replay
+RE	Resident Evil
+rep	Reputation
+resto	Restoration
+rez	Resurrection
+RL	Real life
+RMAH	Real money auction house
+RMP	Rogue, Mage, Priest
+RNG	Random number generator
+robo	Robotics Facility
+ROFLMFAO	Rolling on the floor laughing my freakin' a** off
+ROM	Emulator game
+rox	Rocks
+roxorz	Rocks
+RP	Role play
+RPC	Role play chat
+RPG	Role playing game
+RQ	Real quick
+RTFM	Read the flippin' manual
+RTS	Real-time strategy
+RW	Real world
+S/U	Shut up
+S2U	Same to you
+SB	Small blind
+SBT	Sorry 'bout that
+sc2	StarCraft 2
+sc2nite	StarCraft 2 tonight?
+Scrub	Loser
+SEAL	Slaying everyone and laughing
+sec	Second
+SH	Short handed
+shat	Shattrath City
+shatt	Shattrath City
+shmup	Shoot 'em up
+SMTW	Sunday, Monday, Tuesday, Wednesday
+Smurf	Hidden alternate character
+SNES	Super Nintendo Entertainment System
+SNG	Sit 'n go
+SOB	Son of a b****
+SOH	Slight of hand
+SOS	Save our souls
+SP	Spell power
+spec	Specialization
+Speedling	Zergling with Metabolic Boost
+SS	Short stacked
+ss	Miss
+str	Strength
+STT	Single table tournament
+SU	Shut up
+sux	Sucks
+SWTOR	Star Wars: The Old Republic
+SWYP	So what's your problem
+SYIH	See you in h***
+S~!	Salute
+T4T	Thanks for trade
+Tank	Strong character
+TANSTAAFL	There ain't no such thing as a free lunch
+tard	Retard
+TCG	Trading card game
+td	Touchdown
+TDM	Team Death Match
+teh	The
+terribad	Terrible bad
+TF	Twisted Fate
+TF2	Team Fortress 2
+TFB	Too freakin' bad
+THTH	Too hot to handle
+Tilted	Aggravated
+TISNF	That is so not fair
+TJI	Try joining in
+TKA	Totally Kick A**
+TLDR	Too long, didn't read
+TMNT	Teenage Mutant Ninja Turtles
+Toon	Alternate character
+toss	Protoss
+tourney	Tournament
+TPTB	The powers that be
+TPvPZ	Terran Protoss versus Protoss Zerg
+TQVM	Thank you very much
+Trash	Dungeon enemy mob groups
+Trolling	Posting offensive comments
+TRS	That really sucks
+TTG	Time to go
+TTKA	Time to kick a**
+TTYL	Talk to you later
+Turtling	Playing defensively
+TvP	Terran versus Protoss
+TvT	Terran versus Terran
+TvZ	Terran versus Zerg
+Twink	Powerful low-level character
+Twinking	Leveling up with assistance
+TWMA	Till we meet again
+TY	Thank you
+TYVM	Thank you very much
+u/l	Upload
+Uber	The best
+ugh	Disgusted
+ul	Unlucky
+ul	Upload
+ult	Ultimate ability
+UTG	Under the gun
+UY	Up yours
+vent	Ventrilo
+vfx	Visual effects
+VG	Video game
+VNH	Very nice hand
+VPIP	Voluntary put in pot
+VR	Virtual reality
+vs	Versus
+w00t	Joy and excitement
+w00t	Yay
+W8	Wait
+waggro	Wife aggro
+WAM	Wait a minute
+WAS	Wait a second
+WB	Welcome back
+WC	Water closet
+WCG	World Cyber Games
+WD	Well done
+wei	Whatever idiot
+Wewt	Woot
+wg	Wintergrasp
+Wha	What
+Whew	Expression of relief
+Whoa	Expression of surprise
+Wipe	Total death
+WL	Whatta loser
+Woah	Expression of surprise
+WOL	Wings of Liberty
+WOOT	We own the other team
+woot	Wonderful loot
+WOTLK	Wrath of the Lich King
+WOW	World of Warcraft
+WP	Wrong person
+WP	Well played
+WPT	World Poker Tour
+WR	Win ratio
+WSOP	World Series of Poker
+wsp	Whisper
+WT	What the
+WTA	Winner takes all
+WTB	Want to buy
+WTC	What the crap
+WTF	What the f***
+WTFO	What the f***; Over
+WTGP	Want to go private
+WTS	What the s***
+WTS	Want to sell
+WTT	Want to trade
+wut	What
+WW	Well won
+WYB	Watch your back
+WYD	Who's your daddy?
+xb	Xbox
+xbl	Xbox Live
+xmute	Transmute
+xp	Experience
+Y	Why
+Y/R	Yeah right
+YF	You fail
+YHS	Your hand sucks
+YM	Your mom
+YRG	You are good
+YRL	You are lame
+YS	You suck
+YT	Your turn
+YW	You're welcome
+ZOMG	Oh my gosh!
+Zoning	Constraining enemy positions
+ZvP	Zerg versus Protoss
+ZvT	Zerg versus Terran
+ZvZ	Zerg versus Zerg
+^5	High five

@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link type="text/plain" rel="author" href="humans.txt">
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <link rel="import" href="_widgets/xmodal.html">
+    <link rel="import" href="_widgets/xdropdown.html">
     <!--[if lt IE 9]>
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -16,19 +18,85 @@
     <link rel="stylesheet" href="http://weloveiconfonts.com/api/?family=fontawesome">
   </head>
 <body>
+  <header>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <div class="container" style="width: auto;">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-exchange"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <!--a class="brand" href="#">Project name</a-->
+        <div class="nav-collapse">
+          <ul class="nav">
+            <li class="dropdown" is="x-dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"></a>
+              <ul class="dropdown-menu">
+                <li></li>
+              </ul>
+            </li>
+            <li class="dropdown" is="x-dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown"></a>
+              <ul class="dropdown-menu">
+                <li></li>
+              </ul>
+            </li>
+          </ul>
+          <ul class="nav pull-right">
+            <li class="divider-vertical"></li>
+            <li><a href="http://github.com/davidB/vdrones" title="Ludum Dare 48 entry" onclick="_gaq.push(['_trackEvent', 'community', 'ld48']);"><span class="fontawesome-comments"></span></a></li>
+            <li class="divider-vertical"></li>
+            <li><a href="http://github.com/davidB/ld48_minimalism" target="_blank" onclick="_gaq.push(['_trackEvent', 'community', 'info', 'gihub']);"><span class="fontawesome-github"></span></a></li>
+        </ul>
+        </div><!-- /.nav-collapse -->
+      </div>
+    </div><!-- /navbar-inner -->
+  </div><!-- /navbar -->
+  </header>
+
     <form onsubmit="return false;" class="form-search" id="search">
       <p>Find Abbreviations or Acronyms to finish !</p>
       <input type="text" class="input-medium search-query">
       <button type="submit" class="btn">Search</button>
       <div style="text-align: center"></div>
     </form>
+
     <div id="rails">
-      <div id="pSlowest" class="player"><object data="botS.svg" type="image/svg+xml"></object><div class="name" style="opacity:0.8">Bot0</div></div>
-      <div id="pFastest" class="player"><object data="botF.svg" type="image/svg+xml"></object><div class="name" style="opacity:0.8">Bot100</div></div>
-      <div id="player1" class="player"><object data="player1.svg" type="image/svg+xml"></object><div class="name">Player</div></div>
+      <div id="pSlowest" class="player"><object data="botS.svg" type="image/svg+xml"></object><div class="name" style="opacity:0.8">Bot0<br><sub></sub></div></div>
+      <div id="pFastest" class="player"><object data="botF.svg" type="image/svg+xml"></object><div class="name" style="opacity:0.8">Bot100<br><sub></sub></div></div>
+      <div id="player1" class="player"><object data="player1.svg" type="image/svg+xml"></object><div class="name">Player<br><sub></sub></div></div>
     </div>
+
     <div id="abbrevs">
       <div style="display:none"></div>
+    </div>
+    <div is="x-modal" id="runresult_dialog" style="visibility:hidden">
+    <div class="modal-body">
+      <table class="stats">
+        <tbody>
+          <tr>
+            <th>Category</th>
+            <td></td>
+          </tr>
+          <tr>
+            <th>Score</th>
+            <td style="font-size:200%"></td>
+          </tr>
+          <!--tr>
+            <th>Bot0</th>
+            <td>{{scSlowest}}</td>
+          </tr>
+          <tr>
+            <th>Bot100</th>
+            <td>{{scFastest}}</td>
+          </tr-->
+        </tbody>
+      </table>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" data-dismiss="modal" tabindex="-1"><i class="icon-repeat"></i> Replay</button>
+    </div>
     </div>
     
     <script src="packages/browser/dart.js"></script>

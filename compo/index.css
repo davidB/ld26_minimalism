@@ -1,3 +1,33 @@
+/* Icons @import url(http://weloveiconfonts.com/api/?family=fontawesome|fontelico|zocial); */
+
+/* fontawesome */
+[class*="fontawesome-"]:before {
+  font-family: 'FontAwesome', sans-serif;
+}
+
+/* fontelico */
+[class*="fontelico-"]:before {
+  font-family: 'fontelico', sans-serif;
+}
+
+/* zocial */
+[class*="zocial-"]:before {
+  font-family: 'zocial', sans-serif;
+}
+/*-------------------- RESULT ------------------------------------------------*/
+table.stats {
+  width: 100%;
+}
+table.stats th {
+  text-align: left;
+}
+table.stats td {
+  text-align: right;
+}
+/* HACK to hide modal during loading of the page, and code */
+x-modal {
+  display: none;
+}
 /*-------------------- FORMS -------------------------------------------------*/
 #search {
   background: rgba(240, 250, 250, 0.6);
