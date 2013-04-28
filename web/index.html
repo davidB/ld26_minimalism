@@ -22,12 +22,10 @@
       <button type="submit" class="btn" on-click="tryAbbrev()">Search</button>
       <div style="text-align: center">{{lastStepText}}</div>
     </form>
-    <div id="progressions">
-      <div id="rails">
-        <div id="pSlowest" class="player"><object data="../botS.svg" type="image/svg+xml"></object><div class="name" style="opacity:0.8">Bot0</div></div>
-        <div id="pFastest" class="player"><object data="../botF.svg" type="image/svg+xml"></object><div class="name" style="opacity:0.8">Bot100</div></div>
-        <div id="player1" class="player"><object data="../player1.svg" type="image/svg+xml"></object><div class="name">Player</div></div>
-      </div>
+    <div id="rails">
+      <div id="pSlowest" class="player"><object data="../botS.svg" type="image/svg+xml"></object><div class="name" style="opacity:0.8">Bot0</div></div>
+      <div id="pFastest" class="player"><object data="../botF.svg" type="image/svg+xml"></object><div class="name" style="opacity:0.8">Bot100</div></div>
+      <div id="player1" class="player"><object data="../player1.svg" type="image/svg+xml"></object><div class="name">Player</div></div>
     </div>
     <div id="abbrevs">
       <div template repeat='abbrev in abbrevs.selected2' class="abbrev {{'abb_' + abbrev.id}}" style="top:50%; left:50%">{{abbrev.long}}</div>
