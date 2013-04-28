@@ -28,11 +28,20 @@ class Abbrevs {
     }
     return b;
   }
+
+  //https://raw.github.com/wiki/davidB/ld48_minimalism/cat_test.md
+  static List<Abbrev> generateFromCSV(String s)  {
+    var b  = new List<Abbrev>();
+    return b;
+  }
 }
 
 class AbbrevsSelection {
   var _abbrevs = new Map<String,Abbrev>();
+  var _abbrevBonus = null;
+
   get selected => _abbrevs.values;
+  get abbrevBonus => _abbrevBonus;
 
   // return values in number of occurence
   get selected2 => shuffle(_abbrevs.values.expand((v) => new List.filled(v.nbOccurences, v)).toList());
@@ -44,16 +53,17 @@ class AbbrevsSelection {
   Abbrev tryAbbrev(String k) => _abbrevs.remove(k);
 
   //TODO improve shuffle
-  void selectFrom(List<Abbrev> l, {num ratio : 0.7, int maxOccurences : 3}) {
+  void selectFrom(List<Abbrev> l, {num ratio : 0.8, int maxOccurences : 3}) {
     _abbrevs.clear();
     shuffle(l);
     var r = new math.Random();
     // select the n firsts of the list
-    var nb = (l.length.toDouble() * ratio) - 1;
+    var nb = ((l.length - 1).toDouble() * ratio);
     for (var i = nb.toInt(); i > 0; i--) {
       var a = l[i];
-      _abbrevs[a.short] = new Abbrev(a.short, a.long, 1 + r.nextInt(maxOccurences - 1));
+      _abbrevs[a.short] = new Abbrev(a.short, a.long, 1 + r.nextInt(maxOccurences));
     }
+    _abbrevBonus = new Abbrev(l[0].short, l[0].long, maxOccurences + 3);
   }
 
 }

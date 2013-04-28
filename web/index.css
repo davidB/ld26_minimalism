@@ -68,10 +68,52 @@
 .abbrev {
   position: absolute;
 }
+
+.abbrevBonus {
+  position: absolute;
+  z-index: -2;
+  color: #CC0000;
+  font-weight: bolder;
+  visibility: hidden;
+}
+
+div.playBonus {
+  -webkit-animation: playBonus 7s;
+  -moz-animation: playBonus 7s;
+  animation: playBonus 7s;
+  visibility: hidden;
+}
+
+@-webkit-keyframes playBonus{
+  0%,100% {
+    visibility:visible;
+    opacity:0.3;
+  }
+  25%,75% {
+    visibility:visible;
+    opacity:1.0;
+  }
+  50% {
+    -webkit-animation-timing-function: ease-out;
+    -webkit-transform: translate(-1000px, 0px);
+    -moz-animation-timing-function: ease-out;
+    -moz-transform: translateX(100);
+    animation-timing-function: ease-out;
+    transform: translateX(100);
+    visibility:visible;
+    opacity:1.0;
+  }
+}
+
 .show0 {
-  -webkit-transition: left 1s ease-out, top 1s ease-out;
-  -moz-transition: left 1s ease-out, top 1s ease-out;
-  transition: left 1s ease-out, top 1s ease-out;
+  /*
+  -webkit-transition: -webkit-transform 1s ease-out;
+  -moz-transition: -moz-transform 1s ease-out;
+  transition: transform 1s ease-out;
+  */
+  -webkit-transition: top 1s ease-out, left 1s ease-out;
+  -moz-transition: top 1s ease-out, left 1s ease-out;
+  transition: top 1s ease-out, left 1s ease-out;
 }
 
 .hide0 {
