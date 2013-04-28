@@ -18,8 +18,8 @@
 <body>
     <form onSubmit="return false;" class="form-search" id="search">
       <p>Find Abbreviations or Acronyms to finish !</p>
-      <input type="text" bind-value="abbrev" placeholder="abbreviation or acronym" class="input-medium search-query"/>
-      <button type="submit" class="btn" on-click="tryAbbrev(abbrev)">Search</button>
+      <input type="text" bind-value="abbrev" placeholder="abbreviation or acronym (eg: {{abbrevSample}} )" class="input-medium search-query"/>
+      <button type="submit" class="btn" on-click="tryAbbrev()">Search</button>
       <div style="text-align: center">{{lastStepText}}</div>
     </form>
     <div id="progressions">

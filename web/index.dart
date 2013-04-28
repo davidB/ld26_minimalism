@@ -11,6 +11,9 @@ var abbrevs = new AbbrevsSelection();
 var abbrev = "";
 
 @observable
+var abbrevSample = "";
+
+@observable
 var lastStepText = "";
 
 var scope = 2/3;
@@ -46,18 +49,18 @@ void main() {
 }
 var rHide = new math.Random();
 //TODO make testcase (with random generator of k : ala QuickCheck)
-bool tryAbbrev([String k]) {
-  if (k == null) k = abbrev;
-
+bool tryAbbrev() {
+  var k = abbrev;
   var a = (k.isEmpty)? null : abbrevs.tryAbbrev(k);
   player1.step(a);
   pFastest.stepNext();
   pSlowest.stepNext();
-  var railsW = toPixel(query("#rails").getComputedStyle('').width);
+  var railsW = toWPixel(query("#rails"));
   player1.positionLeft(railsW);
   pFastest.positionLeft(railsW);
   pSlowest.positionLeft(railsW);
   if (a != null) {
+    abbrev = '';
     queryAll(".abb_${a.id}").forEach((Element abbrevEl){
       abbrevEl.classes.remove("show0");
       abbrevEl.classes.add("hide${rHide.nextInt(6)}");
@@ -75,8 +78,8 @@ reset() {
   abbrevs.selectFrom(Abbrevs.generateTestSL(50));
   var total = abbrevs.selected.fold(0, (acc, a) => acc += a.score) * scope;
   var sortedSelected = abbrevs.selected.toList(growable: false)..sort(Abbrev.compareScore);
+  abbrevSample = sortedSelected.isEmpty ? '' : sortedSelected[0].short;
 
-  print("ll ${sortedSelected.length}");
   // should take care of the width and height of sequence
   new Timer(const Duration(milliseconds:500), (){
     var r = new math.Random();
