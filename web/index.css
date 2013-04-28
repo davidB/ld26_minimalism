@@ -96,10 +96,22 @@ div.playBonus {
   50% {
     -webkit-animation-timing-function: ease-out;
     -webkit-transform: translate(-1000px, 0px);
+    visibility:visible;
+    opacity:1.0;
+  }
+}
+@-moz-keyframes playBonus{
+  0%,100% {
+    visibility:visible;
+    opacity:0.3;
+  }
+  25%,75% {
+    visibility:visible;
+    opacity:1.0;
+  }
+  50% {
     -moz-animation-timing-function: ease-out;
-    -moz-transform: translateX(100);
-    animation-timing-function: ease-out;
-    transform: translateX(100);
+    -moz-transform: translate(-1000px, 0px);
     visibility:visible;
     opacity:1.0;
   }
@@ -122,34 +134,60 @@ div.playBonus {
   animation: hide0 1s;
   visibility: hidden;
 }
-@-webkit-keyframes hide0{
+@keyframes hide0{
   0% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(1);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(1);
     animation-timing-function: ease-out;
     transform: scale(1);
     opacity: 1;
     visibility:visible;
   }
   20% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(2);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(2);
     animation-timing-function: ease-out;
     transform: scale(2);
     color: #333333;
     opacity: 1;
   }
   100% {
-    -webkit-animation-timing-function: ease-out;
-    -webkit-transform: scale(8);
-    -moz-animation-timing-function: ease-out;
-    -moz-transform: scale(8);
     animation-timing-function: ease-out;
     transform: scale(8);
+    opacity: 0.05;
+  }
+}
+@-webkit-keyframes hide0{
+  0% {
+    -webkit-animation-timing-function: ease-out;
+    -webkit-transform: scale(1);
+    opacity: 1;
+    visibility:visible;
+  }
+  20% {
+    -webkit-animation-timing-function: ease-out;
+    -webkit-transform: scale(2);
+    color: #333333;
+    opacity: 1;
+  }
+  100% {
+    -webkit-animation-timing-function: ease-out;
+    -webkit-transform: scale(8);
+    opacity: 0.05;
+  }
+}
+@-moz-keyframes hide0{
+  0% {
+    -moz-animation-timing-function: ease-out;
+    -moz-transform: scale(1);
+    opacity: 1;
+    visibility:visible;
+  }
+  20% {
+    -moz-animation-timing-function: ease-out;
+    -moz-transform: scale(2);
+    color: #333333;
+    opacity: 1;
+  }
+  100% {
+    -moz-animation-timing-function: ease-out;
+    -moz-transform: scale(8);
     opacity: 0.05;
   }
 }
