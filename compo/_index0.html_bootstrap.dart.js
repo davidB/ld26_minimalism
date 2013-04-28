@@ -1781,6 +1781,14 @@ $$.JSArray = {"": "Interceptor;",
     else
       $.Sort__dualPivotQuicksort(receiver, 0, t1, compare);
   },
+  lastIndexOf$2: function(receiver, element, start) {
+    if (start == null)
+      start = receiver.length - 1;
+    return $.Arrays_lastIndexOf(receiver, element, start);
+  },
+  lastIndexOf$1: function($receiver, element) {
+    return this.lastIndexOf$2($receiver, element, null);
+  },
   contains$1: function(receiver, other) {
     var i;
     for (i = 0; i < receiver.length; ++i) {
@@ -1949,6 +1957,9 @@ $$.JSNumber = {"": "Interceptor;",
   remainder$1: function(receiver, b) {
     return receiver % b;
   },
+  abs$0: function(receiver) {
+    return Math.abs(receiver);
+  },
   toInt$0: function(receiver) {
     var truncated;
     if (this.get$isNaN(receiver))
@@ -1984,6 +1995,9 @@ $$.JSNumber = {"": "Interceptor;",
   get$hashCode: function(receiver) {
     return receiver & 0x1FFFFFFF;
   },
+  $negate: function(receiver) {
+    return -receiver;
+  },
   $add: function(receiver, other) {
     if (typeof other !== "number")
       throw $.wrapException($.ArgumentError$(other));
@@ -2003,6 +2017,17 @@ $$.JSNumber = {"": "Interceptor;",
     if (typeof other !== "number")
       throw $.wrapException($.ArgumentError$(other));
     return receiver * other;
+  },
+  $mod: function(receiver, other) {
+    var result = receiver % other;
+    if (result === 0)
+      return 0;
+    if (result > 0)
+      return result;
+    if (other < 0)
+      return result - other;
+    else
+      return result + other;
   },
   $tdiv: function(receiver, other) {
     return this.truncate$0(receiver / other);
@@ -2127,6 +2152,31 @@ $$.JSString = {"": "Interceptor;",
     if (start < 0)
       return -1;
     return receiver.indexOf(other, start);
+  },
+  lastIndexOf$2: function(receiver, other, start) {
+    var t1;
+    if (other == null)
+      $.throwExpression($.ArgumentError$(null));
+    if (typeof other !== "string")
+      throw $.wrapException($.ArgumentError$(other));
+    if (start != null) {
+      if (typeof start !== "number")
+        throw $.wrapException($.ArgumentError$(start));
+      if (start < 0)
+        return -1;
+      t1 = receiver.length;
+      if (start >= t1) {
+        if (other === "")
+          return t1;
+        start = t1 - 1;
+      } else
+        start = start;
+    } else
+      start = receiver.length - 1;
+    return receiver.lastIndexOf(other, start);
+  },
+  lastIndexOf$1: function($receiver, other) {
+    return this.lastIndexOf$2($receiver, other, null);
   },
   contains$2: function(receiver, other, startIndex) {
     if (other == null)
@@ -2276,6 +2326,27 @@ $$.StringMatch = {"": "Object;start,str,pattern",
     return this.pattern;
   },
   $isMatch: true
+};
+
+$$.Future_Future$delayed_anon1 = {"": "Closure;",
+  call$0: function() {
+    return;
+  },
+  $isFunction: true
+};
+
+$$.Future_Future$delayed_anon = {"": "Closure;box_0",
+  call$1: function(_) {
+    return this.box_0.computation_0.call$0();
+  },
+  $isFunction: true
+};
+
+$$.Future_Future$delayed_anon0 = {"": "Closure;future_1",
+  call$0: function() {
+    return this.future_1._sendValue$1(null);
+  },
+  $isFunction: true
 };
 
 $$._CompleterImpl = {"": "Object;future,_isComplete",
@@ -4189,6 +4260,34 @@ $$.ListBase = {"": "Object;",
             this.$indexSet(this, t1.$add(start, i), t4.$index(otherList, t3.$add(otherStart, i)));
     }
   },
+  lastIndexOf$2: function(_, element, startIndex) {
+    var t1, i;
+    t1 = $.getInterceptor(startIndex);
+    if (startIndex == null)
+      startIndex = $.$sub$n(this.get$length(this), 1);
+    else {
+      if (t1.$lt(startIndex, 0))
+        return -1;
+      if (t1.$ge(startIndex, this.get$length(this)))
+        startIndex = $.$sub$n(this.get$length(this), 1);
+    }
+    if (typeof startIndex !== "number")
+      return this.lastIndexOf$2$bailout(1, element, startIndex);
+    for (i = startIndex; i >= 0; --i)
+      if ($.$eq(this.$index(this, i), element) === true)
+        return i;
+    return -1;
+  },
+  lastIndexOf$2$bailout: function(state0, element, startIndex) {
+    var i, t1;
+    for (i = startIndex; t1 = $.getInterceptor$n(i), t1.$ge(i, 0); i = t1.$sub(i, 1))
+      if ($.$eq(this.$index(this, i), element) === true)
+        return i;
+    return -1;
+  },
+  lastIndexOf$1: function($receiver, element) {
+    return this.lastIndexOf$2($receiver, element, null);
+  },
   get$reversed: function(_) {
     return $.ReversedListIterable$(this, null);
   },
@@ -4991,6 +5090,8 @@ $$.NoSuchMethodError = {"": "Object;_receiver,_memberName,_arguments,_namedArgum
     t1.sb_0 = $.StringBuffer$("");
     t1.i_1 = 0;
     t2 = this._arguments;
+    if (typeof t2 !== "string" && (typeof t2 !== "object" || t2 === null || t2.constructor !== Array && !$.getInterceptor(t2).$isJavaScriptIndexingBehavior))
+      return this.toString$0$bailout1(1, t1, t2);
     for (; $.$lt$n(t1.i_1, t2.length); t1.i_1 = $.$add$ns(t1.i_1, 1)) {
       if ($.$gt$n(t1.i_1, 0))
         t1.sb_0.write$1(", ");
@@ -5005,21 +5106,61 @@ $$.NoSuchMethodError = {"": "Object;_receiver,_memberName,_arguments,_namedArgum
     t2 = this._namedArguments;
     t2.forEach$1(t2, new $.NoSuchMethodError_toString_anon(t1));
     t2 = this._existingArgumentNames;
-    if (t2 == null)
-      return "NoSuchMethodError : method not found: '" + $.S(this._memberName) + "'\nReceiver: " + $.S($.Error_safeToString(this._receiver)) + "\nArguments: [" + $.S(t1.sb_0) + "]";
-    else {
+    if (typeof t2 !== "string" && (typeof t2 !== "object" || t2 === null || t2.constructor !== Array && !$.getInterceptor(t2).$isJavaScriptIndexingBehavior))
+      return this.toString$0$bailout1(2, t1, t2);
+    t3 = t1.sb_0;
+    actualParameters = t3.toString$0(t3);
+    t1.sb_0 = $.StringBuffer$("");
+    for (i = 0; i < t2.length; ++i) {
+      if (i > 0)
+        t1.sb_0.write$1(", ");
       t3 = t1.sb_0;
-      actualParameters = t3.toString$0(t3);
-      t1.sb_0 = $.StringBuffer$("");
-      for (i = 0; $.JSNumber_methods.$lt(i, $.JSNull_methods.get$length(t2)); ++i) {
-        if (i > 0)
-          t1.sb_0.write$1(", ");
-        t1.sb_0.write$1($.JSNull_methods.$index(t2, i));
-      }
-      t1 = t1.sb_0;
-      formalParameters = t1.toString$0(t1);
-      t1 = this._memberName;
-      return "NoSuchMethodError: incorrect number of arguments passed to method named '" + $.S(t1) + "'\nReceiver: " + $.S($.Error_safeToString(this._receiver)) + "\nTried calling: " + $.S(t1) + "(" + actualParameters + ")\nFound: " + $.S(t1) + "(" + formalParameters + ")";
+      if (i >= t2.length)
+        throw $.ioore(i);
+      t3.write$1(t2[i]);
+    }
+    t1 = t1.sb_0;
+    formalParameters = t1.toString$0(t1);
+    t1 = this._memberName;
+    return "NoSuchMethodError: incorrect number of arguments passed to method named '" + $.S(t1) + "'\nReceiver: " + $.S($.Error_safeToString(this._receiver)) + "\nTried calling: " + $.S(t1) + "(" + actualParameters + ")\nFound: " + $.S(t1) + "(" + formalParameters + ")";
+  },
+  toString$0$bailout1: function(state0, t1, t2) {
+    switch (state0) {
+      case 0:
+        t1 = {};
+        t1.sb_0 = $.StringBuffer$("");
+        t1.i_1 = 0;
+        t2 = this._arguments;
+      case 1:
+        state0 = 0;
+        if (t2 != null)
+          for (t3 = $.getInterceptor$asx(t2); $.$lt$n(t1.i_1, $.get$length$asx(t2)); t1.i_1 = $.$add$ns(t1.i_1, 1)) {
+            if ($.$gt$n(t1.i_1, 0))
+              t1.sb_0.write$1(", ");
+            t1.sb_0.write$1($.Error_safeToString(t3.$index(t2, t1.i_1)));
+          }
+        t2 = this._namedArguments;
+        t2.forEach$1(t2, new $.NoSuchMethodError_toString_anon(t1));
+        t2 = this._existingArgumentNames;
+      case 2:
+        var t3, actualParameters, i, formalParameters;
+        state0 = 0;
+        if (t2 == null)
+          return "NoSuchMethodError : method not found: '" + $.S(this._memberName) + "'\nReceiver: " + $.S($.Error_safeToString(this._receiver)) + "\nArguments: [" + $.S(t1.sb_0) + "]";
+        else {
+          t3 = t1.sb_0;
+          actualParameters = t3.toString$0(t3);
+          t1.sb_0 = $.StringBuffer$("");
+          for (t3 = $.getInterceptor$asx(t2), i = 0; $.JSNumber_methods.$lt(i, $.get$length$asx(t2)); ++i) {
+            if (i > 0)
+              t1.sb_0.write$1(", ");
+            t1.sb_0.write$1(t3.$index(t2, i));
+          }
+          t1 = t1.sb_0;
+          formalParameters = t1.toString$0(t1);
+          t1 = this._memberName;
+          return "NoSuchMethodError: incorrect number of arguments passed to method named '" + $.S(t1) + "'\nReceiver: " + $.S($.Error_safeToString(this._receiver)) + "\nTried calling: " + $.S(t1) + "(" + actualParameters + ")\nFound: " + $.S(t1) + "(" + formalParameters + ")";
+        }
     }
   }
 };
@@ -5305,6 +5446,14 @@ $$._ChildrenElementList = {"": "ListBase;_liblib3$_element,_childElements",
   },
   sublist$1: function($receiver, start) {
     return this.sublist$2($receiver, start, null);
+  },
+  lastIndexOf$2: function(_, element, start) {
+    if (start == null)
+      start = this.get$length(this) - 1;
+    return $.Lists_lastIndexOf(this, element, start);
+  },
+  lastIndexOf$1: function($receiver, element) {
+    return this.lastIndexOf$2($receiver, element, null);
   },
   clear$0: function(_) {
     this._liblib3$_element.textContent = "";
@@ -6059,6 +6208,12 @@ $$._WrappedList = {"": "Object;_liblib3$_list",
   sort$1: function(_, compare) {
     $.sort$1$ax(this._liblib3$_list, compare);
   },
+  lastIndexOf$2: function(_, element, start) {
+    return $.lastIndexOf$2$asx(this._liblib3$_list, element, start);
+  },
+  lastIndexOf$1: function($receiver, element) {
+    return this.lastIndexOf$2($receiver, element, null);
+  },
   removeLast$0: function(_) {
     return $.removeLast$0$ax(this._liblib3$_list);
   },
@@ -6294,6 +6449,14 @@ $$.FilteredElementList = {"": "ListBase;_node,_childNodes",
   sublist$1: function($receiver, start) {
     return this.sublist$2($receiver, start, null);
   },
+  lastIndexOf$2: function(_, element, start) {
+    if (start == null)
+      start = this.get$length(this) - 1;
+    return $.JSArray_methods.lastIndexOf$2(this.get$_filtered(), element, start);
+  },
+  lastIndexOf$1: function($receiver, element) {
+    return this.lastIndexOf$2($receiver, element, null);
+  },
   skip$1: function(_, n) {
     return this.get$IterableMixinWorkaround().skipList$2(this, n);
   },
@@ -6453,6 +6616,20 @@ $$._reset0__anon = {"": "Closure;r_0",
   $isFunction: true
 };
 
+$$.newAudioManager_anon = {"": "Closure;audioManager_0,musicClip_1",
+  call$1: function(_) {
+    var t1, t2;
+    $.Primitives_printString("music loaded");
+    t1 = this.audioManager_0;
+    t2 = t1.get$music();
+    t2.set$clip(t2, this.musicClip_1);
+    t1 = t1.get$music();
+    t1.play$0(t1);
+    $.Primitives_printString("music playing");
+  },
+  $isFunction: true
+};
+
 $$.init_autogenerated_anon = {"": "Closure;",
   call$0: function() {
     if ($.observeReads() === true)
@@ -6572,13 +6749,109 @@ $$.init_autogenerated__anon3 = {"": "Closure;box_1",
 
 $$.init_autogenerated_anon5 = {"": "Closure;box_2",
   call$1: function($$event) {
-    var t1 = $.get$value$x(this.box_2.__e12_2);
-    $.abbrev(t1);
+    var t1 = $.get$checked$x(this.box_2.__e12_2);
+    $.masterMute(t1);
   },
   $isFunction: true
 };
 
 $$.init_autogenerated_anon6 = {"": "Closure;",
+  call$0: function() {
+    return $._audioManager.get$mute();
+  },
+  $isFunction: true
+};
+
+$$.init_autogenerated_anon7 = {"": "Closure;box_2",
+  call$1: function(e) {
+    var t1 = this.box_2;
+    if ($.$eq($.get$checked$x(t1.__e12_2), e) !== true)
+      $.set$checked$x(t1.__e12_2, e);
+  },
+  $isFunction: true
+};
+
+$$.init_autogenerated_anon8 = {"": "Closure;box_2",
+  call$1: function($$event) {
+    var t1 = $.get$value$x(this.box_2.__e13_3);
+    $.masterVolume(t1);
+  },
+  $isFunction: true
+};
+
+$$.init_autogenerated_anon9 = {"": "Closure;",
+  call$0: function() {
+    return $.toString$0($._audioManager.get$masterVolume());
+  },
+  $isFunction: true
+};
+
+$$.init_autogenerated_anon10 = {"": "Closure;box_2",
+  call$1: function(e) {
+    var t1 = this.box_2;
+    if ($.$eq($.get$value$x(t1.__e13_3), e) !== true)
+      $.set$value$x(t1.__e13_3, e);
+  },
+  $isFunction: true
+};
+
+$$.init_autogenerated_anon11 = {"": "Closure;box_2",
+  call$1: function($$event) {
+    var t1 = $.get$value$x(this.box_2.__e14_4);
+    $.musicVolume(t1);
+  },
+  $isFunction: true
+};
+
+$$.init_autogenerated_anon12 = {"": "Closure;",
+  call$0: function() {
+    return $.toString$0($._audioManager.get$musicVolume());
+  },
+  $isFunction: true
+};
+
+$$.init_autogenerated_anon13 = {"": "Closure;box_2",
+  call$1: function(e) {
+    var t1 = this.box_2;
+    if ($.$eq($.get$value$x(t1.__e14_4), e) !== true)
+      $.set$value$x(t1.__e14_4, e);
+  },
+  $isFunction: true
+};
+
+$$.init_autogenerated_anon14 = {"": "Closure;box_2",
+  call$1: function($$event) {
+    var t1 = $.get$value$x(this.box_2.__e15_5);
+    $.sourceVolume(t1);
+  },
+  $isFunction: true
+};
+
+$$.init_autogenerated_anon15 = {"": "Closure;",
+  call$0: function() {
+    return $.toString$0($._audioManager.get$sourceVolume());
+  },
+  $isFunction: true
+};
+
+$$.init_autogenerated_anon16 = {"": "Closure;box_2",
+  call$1: function(e) {
+    var t1 = this.box_2;
+    if ($.$eq($.get$value$x(t1.__e15_5), e) !== true)
+      $.set$value$x(t1.__e15_5, e);
+  },
+  $isFunction: true
+};
+
+$$.init_autogenerated_anon17 = {"": "Closure;box_2",
+  call$1: function($$event) {
+    var t1 = $.get$value$x(this.box_2.__e17_6);
+    $.abbrev(t1);
+  },
+  $isFunction: true
+};
+
+$$.init_autogenerated_anon18 = {"": "Closure;",
   call$0: function() {
     if ($.observeReads() === true)
       $.notifyRead($.get$__changes(), 1, "abbrevSample");
@@ -6587,14 +6860,14 @@ $$.init_autogenerated_anon6 = {"": "Closure;",
   $isFunction: true
 };
 
-$$.init_autogenerated_anon7 = {"": "Closure;box_2",
+$$.init_autogenerated_anon19 = {"": "Closure;box_2",
   call$1: function(__e) {
-    $.set$placeholder$x(this.box_2.__e12_2, "abbreviation or acronym (eg: " + $.S($.get$newValue$x(__e)) + " )");
+    $.set$placeholder$x(this.box_2.__e17_6, "abbreviation or acronym (eg: " + $.S($.get$newValue$x(__e)) + " )");
   },
   $isFunction: true
 };
 
-$$.init_autogenerated_anon8 = {"": "Closure;",
+$$.init_autogenerated_anon20 = {"": "Closure;",
   call$0: function() {
     if ($.observeReads() === true)
       $.notifyRead($.get$__changes(), 1, "abbrev");
@@ -6603,23 +6876,23 @@ $$.init_autogenerated_anon8 = {"": "Closure;",
   $isFunction: true
 };
 
-$$.init_autogenerated_anon9 = {"": "Closure;box_2",
+$$.init_autogenerated_anon21 = {"": "Closure;box_2",
   call$1: function(e) {
     var t1 = this.box_2;
-    if ($.$eq($.get$value$x(t1.__e12_2), e) !== true)
-      $.set$value$x(t1.__e12_2, e);
+    if ($.$eq($.get$value$x(t1.__e17_6), e) !== true)
+      $.set$value$x(t1.__e17_6, e);
   },
   $isFunction: true
 };
 
-$$.init_autogenerated_anon10 = {"": "Closure;",
+$$.init_autogenerated_anon22 = {"": "Closure;",
   call$1: function($$event) {
     $.tryAbbrev();
   },
   $isFunction: true
 };
 
-$$.init_autogenerated_anon11 = {"": "Closure;",
+$$.init_autogenerated_anon23 = {"": "Closure;",
   call$0: function() {
     if ($.observeReads() === true)
       $.notifyRead($.get$__changes(), 1, "lastStepText");
@@ -6628,7 +6901,7 @@ $$.init_autogenerated_anon11 = {"": "Closure;",
   $isFunction: true
 };
 
-$$.init_autogenerated_anon12 = {"": "Closure;",
+$$.init_autogenerated_anon24 = {"": "Closure;",
   call$0: function() {
     if ($.observeReads() === true)
       $.notifyRead($.get$__changes(), 1, "scSlowest");
@@ -6637,7 +6910,7 @@ $$.init_autogenerated_anon12 = {"": "Closure;",
   $isFunction: true
 };
 
-$$.init_autogenerated_anon13 = {"": "Closure;",
+$$.init_autogenerated_anon25 = {"": "Closure;",
   call$0: function() {
     if ($.observeReads() === true)
       $.notifyRead($.get$__changes(), 1, "scFastest");
@@ -6646,7 +6919,7 @@ $$.init_autogenerated_anon13 = {"": "Closure;",
   $isFunction: true
 };
 
-$$.init_autogenerated_anon14 = {"": "Closure;",
+$$.init_autogenerated_anon26 = {"": "Closure;",
   call$0: function() {
     if ($.observeReads() === true)
       $.notifyRead($.get$__changes(), 1, "scPlayer");
@@ -6655,7 +6928,7 @@ $$.init_autogenerated_anon14 = {"": "Closure;",
   $isFunction: true
 };
 
-$$.init_autogenerated_anon15 = {"": "Closure;",
+$$.init_autogenerated_anon27 = {"": "Closure;",
   call$0: function() {
     if ($.observeReads() === true)
       $.notifyRead($.get$__changes(), 1, "abbrevsSelected");
@@ -6664,15 +6937,15 @@ $$.init_autogenerated_anon15 = {"": "Closure;",
   $isFunction: true
 };
 
-$$.init_autogenerated_anon16 = {"": "Closure;__html4_9",
+$$.init_autogenerated_anon28 = {"": "Closure;__html4_9",
   call$3: function($$list, $$index, __t) {
-    var abbrev, __e23, __binding22;
+    var abbrev, __e28, __binding27;
     abbrev = $.$index$asx($$list, $$index);
-    __e23 = $.clone$1$x(this.__html4_9, true);
-    __binding22 = __t.contentBind$2(new $.init_autogenerated__anon(abbrev), false);
-    $.add$1$ax($.get$nodes$x(__e23), __binding22);
-    __t.bindClass$3(__e23, new $.init_autogenerated__anon0(abbrev), false);
-    $.add$1$ax(__t, __e23);
+    __e28 = $.clone$1$x(this.__html4_9, true);
+    __binding27 = __t.contentBind$2(new $.init_autogenerated__anon(abbrev), false);
+    $.add$1$ax($.get$nodes$x(__e28), __binding27);
+    __t.bindClass$3(__e28, new $.init_autogenerated__anon0(abbrev), false);
+    $.add$1$ax(__t, __e28);
   },
   $isFunction: true
 };
@@ -6691,7 +6964,7 @@ $$.init_autogenerated__anon0 = {"": "Closure;abbrev_11",
   $isFunction: true
 };
 
-$$.init_autogenerated_anon17 = {"": "Closure;",
+$$.init_autogenerated_anon29 = {"": "Closure;",
   call$0: function() {
     if ($.observeReads() === true)
       $.notifyRead($.get$__changes(), 1, "category");
@@ -6700,7 +6973,7 @@ $$.init_autogenerated_anon17 = {"": "Closure;",
   $isFunction: true
 };
 
-$$.init_autogenerated_anon18 = {"": "Closure;",
+$$.init_autogenerated_anon30 = {"": "Closure;",
   call$0: function() {
     if ($.observeReads() === true)
       $.notifyRead($.get$__changes(), 1, "level");
@@ -6709,7 +6982,7 @@ $$.init_autogenerated_anon18 = {"": "Closure;",
   $isFunction: true
 };
 
-$$.init_autogenerated_anon19 = {"": "Closure;",
+$$.init_autogenerated_anon31 = {"": "Closure;",
   call$0: function() {
     if ($.observeReads() === true)
       $.notifyRead($.get$__changes(), 1, "scPlayer");
@@ -6718,7 +6991,7 @@ $$.init_autogenerated_anon19 = {"": "Closure;",
   $isFunction: true
 };
 
-$$.init_autogenerated_anon20 = {"": "Closure;",
+$$.init_autogenerated_anon32 = {"": "Closure;",
   call$1: function($$event) {
     $.abbrev("");
     $.get$_abbrevsOfCategory().then$1($._reset0);
@@ -7118,6 +7391,813 @@ $$.PlayerIA = {"": "Player;sequence?,_idx,id,_total,_lastStepText,_progression,_
     $.Player.prototype.reset$1.call(this, this, total);
     this._idx = 0;
   }
+};
+
+$$.AudioClip = {"": "Object;_manager<,_name,_url,_buffer@,_liblib11$_hasError?,_errorString?,_isReadyToPlay?,_urlAbsolute",
+  get$url: function(_) {
+    return this._url;
+  },
+  _onDecode$2: function(buffer, completer) {
+    if (buffer == null) {
+      this._liblib11$_hasError = true;
+      this._errorString = "Error decoding buffer.";
+      completer.complete$1(completer, this);
+      return;
+    }
+    this._liblib11$_hasError = false;
+    this._errorString = "OK";
+    this._buffer = buffer;
+    this._isReadyToPlay = true;
+    completer.complete$1(completer, this);
+  },
+  _onRequestSuccess$2: function(request, completer) {
+    var response = request.response;
+    $.decodeAudioData$3$x(this._manager._context, response, new $.AudioClip__onRequestSuccess_anon(this, completer), new $.AudioClip__onRequestSuccess_anon0(this, completer));
+  },
+  load$0: function(_) {
+    var request, completer, t1;
+    this.get$url(this);
+    this._isReadyToPlay = false;
+    this._buffer = null;
+    if ($.JSString_methods.startsWith$1(this.get$url(this), "sfxr:"))
+      return $.Future_Future$delayed($.Duration$(0, 0, 0, 1, 0, 0), new $.AudioClip_load_anon(this), $.AudioClip);
+    request = new XMLHttpRequest();
+    completer = $._CompleterImpl$($.AudioClip);
+    t1 = $.getInterceptor$x(request);
+    if (this._urlAbsolute)
+      t1.open$2(request, "GET", this.get$url(this));
+    else
+      t1.open$2(request, "GET", this._manager.baseURL + "/" + this.get$url(this));
+    t1 = $.getInterceptor$x(request);
+    request.responseType = "arraybuffer";
+    t1.get$onLoad(request).listen$1(new $.AudioClip_load_anon0(this, request, completer));
+    t1.get$onError(request).listen$1(new $.AudioClip_load_anon1(this, request, completer));
+    t1.get$onAbort(request).listen$1(new $.AudioClip_load_anon2(this, request, completer));
+    request.send();
+    return completer.future;
+  },
+  get$length: function(_) {
+    var t1 = this._buffer;
+    if (t1 == null)
+      return 0;
+    return $.get$duration$x(t1);
+  },
+  $isAudioClip: true
+};
+
+$$.AudioClip__onRequestSuccess_anon = {"": "Closure;this_0,completer_1",
+  call$1: function(b) {
+    return this.this_0._onDecode$2(b, this.completer_1);
+  },
+  $isFunction: true
+};
+
+$$.AudioClip__onRequestSuccess_anon0 = {"": "Closure;this_2,completer_3",
+  call$1: function(b) {
+    return this.this_2._onDecode$2(b, this.completer_3);
+  },
+  $isFunction: true
+};
+
+$$.AudioClip_load_anon = {"": "Closure;this_0",
+  call$0: function() {
+    var t1 = this.this_0;
+    t1.set$_buffer($.SfxrSynth_toAudioBuffer(t1.get$_manager()._context, $.substring$1$s($.get$url$x(t1), 5)));
+    t1.set$_isReadyToPlay(true);
+    return t1;
+  },
+  $isFunction: true
+};
+
+$$.AudioClip_load_anon0 = {"": "Closure;this_1,request_2,completer_3",
+  call$1: function(e) {
+    return this.this_1._onRequestSuccess$2(this.request_2, this.completer_3);
+  },
+  $isFunction: true
+};
+
+$$.AudioClip_load_anon1 = {"": "Closure;this_4,request_5,completer_6",
+  call$1: function(e) {
+    var t1, t2;
+    t1 = this.this_4;
+    this.request_5;
+    t2 = this.completer_6;
+    t1.set$_liblib11$_hasError(true);
+    t1.set$_errorString("Error fetching data");
+    t2.complete$1(t2, t1);
+    return;
+  },
+  $isFunction: true
+};
+
+$$.AudioClip_load_anon2 = {"": "Closure;this_7,request_8,completer_9",
+  call$1: function(e) {
+    var t1, t2;
+    t1 = this.this_7;
+    this.request_8;
+    t2 = this.completer_9;
+    t1.set$_liblib11$_hasError(true);
+    t1.set$_errorString("Error fetching data");
+    t2.complete$1(t2, t1);
+    return;
+  },
+  $isFunction: true
+};
+
+$$.AudioManager = {"": "Object;_context,_destination,_listener,_masterGain,_musicGain,_sourceGain,baseURL,_clips,_sources,_music,_mutedVolume,_musicPaused,_sourcesPaused",
+  get$musicVolume: function() {
+    return this._musicGain.gain.value;
+  },
+  set$musicVolume: function(mv) {
+    this._musicGain.gain.value = mv;
+  },
+  get$masterVolume: function() {
+    return this._masterGain.gain.value;
+  },
+  set$masterVolume: function(mv) {
+    this.set$mute(false);
+    this._masterGain.gain.value = mv;
+  },
+  get$sourceVolume: function() {
+    return this._sourceGain.gain.value;
+  },
+  set$sourceVolume: function(mv) {
+    this._sourceGain.gain.value = mv;
+  },
+  get$mute: function() {
+    return this._mutedVolume != null;
+  },
+  set$mute: function(b) {
+    var t1;
+    if (b === true) {
+      if (this._mutedVolume != null)
+        return;
+      this._mutedVolume = this._masterGain.gain.value;
+      this._masterGain.gain.value = 0;
+    } else {
+      t1 = this._mutedVolume;
+      if (t1 == null)
+        return;
+      this._masterGain.gain.value = t1;
+      this._mutedVolume = null;
+    }
+  },
+  get$music: function() {
+    return this._music;
+  },
+  makeClip$2: function($name, url) {
+    var t1, clip;
+    t1 = this._clips;
+    clip = t1.$index(t1, $name);
+    if (clip != null)
+      return clip;
+    clip = $.AudioClip$_internal(this, $name, url);
+    t1.$indexSet(t1, $name, clip);
+    return clip;
+  },
+  makeSource$1: function($name) {
+    var t1, source;
+    t1 = this._sources;
+    source = t1.$index(t1, $name);
+    if (source != null)
+      return source;
+    source = $.AudioSource$_internal(this, $name, this._sourceGain);
+    t1.$indexSet(t1, $name, source);
+    return source;
+  },
+  AudioManager$1: function(baseURL) {
+    this._context = $.AudioContext_AudioContext();
+    this._destination = this._context.destination;
+    this._listener = this._context.listener;
+    this._masterGain = $.createGain$0$x(this._context);
+    this._musicGain = $.createGain$0$x(this._context);
+    this._sourceGain = $.createGain$0$x(this._context);
+    this._masterGain.connect(this._destination, 0, 0);
+    this._musicGain.connect(this._masterGain, 0, 0);
+    this._sourceGain.connect(this._masterGain, 0, 0);
+    this._music = $.AudioMusic$_internal(this, this._musicGain);
+  }
+};
+
+$$.AudioMusic = {"": "Object;_manager<,_liblib11$_source,_sound,_clip",
+  set$clip: function(_, clip) {
+    this._clip = clip;
+  },
+  play$1$loop: function(_, loop) {
+    var t1 = this._sound;
+    if (t1 != null) {
+      t1.stop$0(t1);
+      this._sound = null;
+    }
+    this._sound = $.AudioSound$_internal(this._liblib11$_source, this._clip, loop);
+    t1 = this._sound;
+    t1.play$0(t1);
+  },
+  play$0: function($receiver) {
+    return this.play$1$loop($receiver, true);
+  },
+  AudioMusic$_internal$2: function(_manager, output) {
+    this._liblib11$_source = $.AudioSource$_internal(this._manager, "music", output);
+    this._liblib11$_source.set$positional(false);
+  }
+};
+
+$$.SfxrParams = {"": "Object;waveType,attackTime,sustainTime,sustainPunch,decayTime,startFrequency,minFrequency,slide,deltaSlide,vibratoDepth,vibratoSpeed,changeAmount,changeSpeed,squareDuty,dutySweep,repeatSpeed,phaserOffset,phaserSweep,lpFilterCutoff,lpFilterCutoffSweep,lpFilterResonance,hpFilterCutoff,hpFilterCutoffSweep,masterVolume@",
+  SfxrParams$fromString$1: function(string) {
+    var values, totalTime, multiplier;
+    values = string.split(",");
+    if (0 >= values.length)
+      throw $.ioore(0);
+    this.waveType = $.SfxrParams__toInt(values[0]);
+    if (1 >= values.length)
+      throw $.ioore(1);
+    this.attackTime = $.SfxrParams__toDouble(values[1]);
+    if (2 >= values.length)
+      throw $.ioore(2);
+    this.sustainTime = $.SfxrParams__toDouble(values[2]);
+    if (3 >= values.length)
+      throw $.ioore(3);
+    this.sustainPunch = $.SfxrParams__toDouble(values[3]);
+    if (4 >= values.length)
+      throw $.ioore(4);
+    this.decayTime = $.SfxrParams__toDouble(values[4]);
+    if (5 >= values.length)
+      throw $.ioore(5);
+    this.startFrequency = $.SfxrParams__toDouble(values[5]);
+    if (6 >= values.length)
+      throw $.ioore(6);
+    this.minFrequency = $.SfxrParams__toDouble(values[6]);
+    if (7 >= values.length)
+      throw $.ioore(7);
+    this.slide = $.SfxrParams__toDouble(values[7]);
+    if (8 >= values.length)
+      throw $.ioore(8);
+    this.deltaSlide = $.SfxrParams__toDouble(values[8]);
+    if (9 >= values.length)
+      throw $.ioore(9);
+    this.vibratoDepth = $.SfxrParams__toDouble(values[9]);
+    if (10 >= values.length)
+      throw $.ioore(10);
+    this.vibratoSpeed = $.SfxrParams__toDouble(values[10]);
+    if (11 >= values.length)
+      throw $.ioore(11);
+    this.changeAmount = $.SfxrParams__toDouble(values[11]);
+    if (12 >= values.length)
+      throw $.ioore(12);
+    this.changeSpeed = $.SfxrParams__toDouble(values[12]);
+    if (13 >= values.length)
+      throw $.ioore(13);
+    this.squareDuty = $.SfxrParams__toDouble(values[13]);
+    if (14 >= values.length)
+      throw $.ioore(14);
+    this.dutySweep = $.SfxrParams__toDouble(values[14]);
+    if (15 >= values.length)
+      throw $.ioore(15);
+    this.repeatSpeed = $.SfxrParams__toDouble(values[15]);
+    if (16 >= values.length)
+      throw $.ioore(16);
+    this.phaserOffset = $.SfxrParams__toDouble(values[16]);
+    if (17 >= values.length)
+      throw $.ioore(17);
+    this.phaserSweep = $.SfxrParams__toDouble(values[17]);
+    if (18 >= values.length)
+      throw $.ioore(18);
+    this.lpFilterCutoff = $.SfxrParams__toDouble(values[18]);
+    if (19 >= values.length)
+      throw $.ioore(19);
+    this.lpFilterCutoffSweep = $.SfxrParams__toDouble(values[19]);
+    if (20 >= values.length)
+      throw $.ioore(20);
+    this.lpFilterResonance = $.SfxrParams__toDouble(values[20]);
+    if (21 >= values.length)
+      throw $.ioore(21);
+    this.hpFilterCutoff = $.SfxrParams__toDouble(values[21]);
+    if (22 >= values.length)
+      throw $.ioore(22);
+    this.hpFilterCutoffSweep = $.SfxrParams__toDouble(values[22]);
+    if (23 >= values.length)
+      throw $.ioore(23);
+    this.masterVolume = $.SfxrParams__toDouble(values[23]);
+    if ($.$lt$n(this.sustainTime, 0.01))
+      this.sustainTime = 0.01;
+    totalTime = $.$add$ns($.$add$ns(this.attackTime, this.sustainTime), this.decayTime);
+    if ($.$lt$n(totalTime, 0.18)) {
+      if (typeof totalTime !== "number")
+        throw $.iae(totalTime);
+      multiplier = 0.18 / totalTime;
+      this.attackTime = $.$mul$n(this.attackTime, multiplier);
+      this.sustainTime = $.$mul$n(this.sustainTime, multiplier);
+      this.decayTime = $.$mul$n(this.decayTime, multiplier);
+    }
+  }
+};
+
+$$.SfxrSynth = {"": "Object;_params,_envelopeLength0,_envelopeLength1,_envelopeLength2,_period,_maxPeriod,_slide,_deltaSlide,_changeAmount,_squareDuty,_dutySweep,_changeTime,_changeLimit",
+  reset$0: function(_) {
+    var p, t1, t2;
+    p = this._params;
+    t1 = p.startFrequency;
+    if (typeof t1 !== "number")
+      return this.reset$0$bailout(1, p, t1);
+    this._period = 100 / (t1 * t1 + 0.001);
+    t1 = p.minFrequency;
+    if (typeof t1 !== "number")
+      return this.reset$0$bailout(2, p, t1);
+    this._maxPeriod = 100 / (t1 * t1 + 0.001);
+    t1 = p.slide;
+    if (typeof t1 !== "number")
+      return this.reset$0$bailout(3, p, t1);
+    this._slide = 1 - t1 * t1 * t1 * 0.01;
+    t1 = p.deltaSlide;
+    if (typeof t1 !== "number")
+      return this.reset$0$bailout(5, p, 0, t1);
+    this._deltaSlide = -t1 * t1 * t1 * 0.000001;
+    t1 = p.waveType;
+    if (typeof t1 !== "number")
+      return this.reset$0$bailout(6, p, t1);
+    if (t1 === 0) {
+      t1 = p.squareDuty;
+      if (typeof t1 !== "number")
+        return this.reset$0$bailout(7, p, t1);
+      this._squareDuty = 0.5 - t1 / 2;
+      t1 = p.dutySweep;
+      if (typeof t1 !== "number")
+        return this.reset$0$bailout(8, p, t1);
+      this._dutySweep = -t1 * 0.00005;
+    }
+    t1 = p.changeAmount;
+    if (typeof t1 !== "number")
+      return this.reset$0$bailout(9, p, t1);
+    t2 = t1 * t1;
+    this._changeAmount = t1 > 0 ? 1 - t2 * 0.9 : 1 + t2 * 10;
+    this._changeTime = 0;
+    t1 = p.changeSpeed;
+    if (typeof t1 !== "number")
+      return this.reset$0$bailout(11, p, t1);
+    if (t1 === 1)
+      t1 = 0;
+    else {
+      t1 = 1 - t1;
+      t1 = t1 * t1 * 20000 + 32;
+    }
+    this._changeLimit = $.JSNumber_methods.toInt$0(t1);
+  },
+  reset$0$bailout: function(state0, p, t1, t2) {
+    switch (state0) {
+      case 0:
+        p = this._params;
+        t1 = p.startFrequency;
+      case 1:
+        state0 = 0;
+        t1 = $.$add$ns($.$mul$n(t1, t1), 0.001);
+        if (typeof t1 !== "number")
+          throw $.iae(t1);
+        this._period = 100 / t1;
+        t1 = p.minFrequency;
+      case 2:
+        state0 = 0;
+        t1 = $.$add$ns($.$mul$n(t1, t1), 0.001);
+        if (typeof t1 !== "number")
+          throw $.iae(t1);
+        this._maxPeriod = 100 / t1;
+        t1 = p.slide;
+      case 3:
+        state0 = 0;
+        t1 = $.$mul$n(t1, t1);
+        t2 = p.slide;
+      case 4:
+        state0 = 0;
+        t2 = $.$mul$n($.$mul$n(t1, t2), 0.01);
+        if (typeof t2 !== "number")
+          throw $.iae(t2);
+        this._slide = 1 - t2;
+        t2 = p.deltaSlide;
+      case 5:
+        state0 = 0;
+        t2 = $.$negate$n(t2);
+        t1 = p.deltaSlide;
+        if (typeof t1 !== "number")
+          throw $.iae(t1);
+        this._deltaSlide = t2 * t1 * t1 * 0.000001;
+        t1 = p.waveType;
+      case 6:
+        state0 = 0;
+      default:
+        if (state0 === 8 || state0 === 7 || state0 === 0 && $.$eq(t1, 0) === true)
+          switch (state0) {
+            case 0:
+              t1 = p.squareDuty;
+            case 7:
+              state0 = 0;
+              this._squareDuty = 0.5 - $.$div$n(t1, 2);
+              t1 = p.dutySweep;
+            case 8:
+              state0 = 0;
+              this._dutySweep = $.$negate$n(t1) * 0.00005;
+          }
+        t1 = p.changeAmount;
+      case 9:
+        state0 = 0;
+        t1 = $.$gt$n(t1, 0);
+        t2 = p.changeAmount;
+      case 10:
+        state0 = 0;
+        if (t1) {
+          t1 = $.$mul$n($.$mul$n(t2, t2), 0.9);
+          if (typeof t1 !== "number")
+            throw $.iae(t1);
+          t1 = 1 - t1;
+        } else {
+          t1 = $.$mul$n($.$mul$n(t2, t2), 10);
+          if (typeof t1 !== "number")
+            throw $.iae(t1);
+          t1 = 1 + t1;
+        }
+        this._changeAmount = t1;
+        this._changeTime = 0;
+        t1 = p.changeSpeed;
+      case 11:
+        state0 = 0;
+        if ($.$eq(t1, 1) === true)
+          t1 = 0;
+        else {
+          t1 = p.changeSpeed;
+          if (typeof t1 !== "number")
+            throw $.iae(t1);
+          t1 = (1 - t1) * (1 - t1) * 20000 + 32;
+        }
+        this._changeLimit = $.JSNumber_methods.toInt$0(t1);
+    }
+  },
+  totalReset$0: function() {
+    var p, t1;
+    this.reset$0(this);
+    p = this._params;
+    t1 = p.attackTime;
+    this._envelopeLength0 = $.$mul$n($.$mul$n(t1, t1), 100000);
+    t1 = p.sustainTime;
+    this._envelopeLength1 = $.$mul$n($.$mul$n(t1, t1), 100000);
+    t1 = p.decayTime;
+    this._envelopeLength2 = $.$add$ns($.$mul$n($.$mul$n(t1, t1), 100000), 10);
+    return $.toInt$0$n($.$add$ns($.$add$ns(this._envelopeLength0, this._envelopeLength1), this._envelopeLength2));
+  },
+  synthWave$2: function(buffer, $length) {
+    var p, _filters, t1, _hpFilterCutoff, _hpFilterDeltaCutoff, _lpFilterCutoff, _lpFilterDeltaCutoff, _lpFilterOn, _masterVolume, _minFreqency, _phaser, _phaserDeltaOffset, _phaserOffset, _repeatLimit, _sustainPunch, _vibratoAmplitude, _vibratoSpeed, _waveType, _envelopeLength, _envelopeOverLength0, _envelopeOverLength1, _envelopeOverLength2, _lpFilterDamping, _phaserBuffer, _noiseBuffer, i, t2, i0, t3, t4, t5, t6, t7, t8, _finished, _envelopeTime, _envelopeVolume, _hpFilterPos, _lpFilterDeltaPos, _lpFilterOldPos, _lpFilterPos, _pos, _sample, _vibratoPhase, _phase, _envelopeStage, _phaserPos, _phaserInt, _repeatTime, t9, _periodTemp0, _periodTemp, _superSample, j, n, t10, _lpFilterPos0;
+    p = this._params;
+    _filters = $.$eq(p.lpFilterCutoff, 1) !== true || $.$eq(p.hpFilterCutoff, 0) !== true;
+    t1 = p.hpFilterCutoff;
+    _hpFilterCutoff = $.$mul$n($.$mul$n(t1, t1), 0.1);
+    t1 = $.$mul$n(p.hpFilterCutoffSweep, 0.0003);
+    if (typeof t1 !== "number")
+      throw $.iae(t1);
+    _hpFilterDeltaCutoff = 1 + t1;
+    t1 = p.lpFilterCutoff;
+    _lpFilterCutoff = $.$mul$n($.$mul$n($.$mul$n(t1, t1), p.lpFilterCutoff), 0.1);
+    t1 = $.$mul$n(p.lpFilterCutoffSweep, 0.0001);
+    if (typeof t1 !== "number")
+      throw $.iae(t1);
+    _lpFilterDeltaCutoff = 1 + t1;
+    _lpFilterOn = $.$eq(p.lpFilterCutoff, 1) !== true;
+    t1 = p.masterVolume;
+    _masterVolume = $.$mul$n(t1, t1);
+    _minFreqency = p.minFrequency;
+    _phaser = $.$eq(p.phaserOffset, 0) !== true || $.$eq(p.phaserSweep, 0) !== true;
+    t1 = p.phaserSweep;
+    _phaserDeltaOffset = $.$mul$n($.$mul$n($.$mul$n(t1, t1), p.phaserSweep), 0.2);
+    t1 = p.phaserOffset;
+    t1 = $.$mul$n(t1, t1);
+    _phaserOffset = $.$mul$n(t1, $.$lt$n(p.phaserOffset, 0) ? -1020 : 1020);
+    if ($.$eq(p.repeatSpeed, 0) !== true) {
+      t1 = p.repeatSpeed;
+      if (typeof t1 !== "number")
+        throw $.iae(t1);
+      _repeatLimit = $.JSNumber_methods.toInt$0((1 - t1) * (1 - t1) * 20000) + 32;
+    } else
+      _repeatLimit = 0;
+    _sustainPunch = p.sustainPunch;
+    _vibratoAmplitude = $.$div$n(p.vibratoDepth, 2);
+    t1 = p.vibratoSpeed;
+    _vibratoSpeed = $.$mul$n($.$mul$n(t1, t1), 0.01);
+    _waveType = p.waveType;
+    _envelopeLength = this._envelopeLength0;
+    if (typeof _envelopeLength !== "number")
+      throw $.iae(_envelopeLength);
+    _envelopeOverLength0 = 1 / _envelopeLength;
+    t1 = this._envelopeLength1;
+    if (typeof t1 !== "number")
+      throw $.iae(t1);
+    _envelopeOverLength1 = 1 / t1;
+    t1 = this._envelopeLength2;
+    if (typeof t1 !== "number")
+      throw $.iae(t1);
+    _envelopeOverLength2 = 1 / t1;
+    t1 = p.lpFilterResonance;
+    t1 = $.$mul$n($.$mul$n(t1, t1), 20);
+    if (typeof t1 !== "number")
+      throw $.iae(t1);
+    if (typeof _lpFilterCutoff !== "number")
+      throw $.iae(_lpFilterCutoff);
+    _lpFilterDamping = 5 / (1 + t1) * (0.01 + _lpFilterCutoff);
+    _lpFilterDamping = 1 - (_lpFilterDamping > 0.8 ? 0.8 : _lpFilterDamping);
+    _phaserBuffer = $.List_List(1024, $.$double);
+    $.setRuntimeTypeInfo(_phaserBuffer, [$.$double]);
+    _noiseBuffer = $.List_List(32, $.$double);
+    $.setRuntimeTypeInfo(_noiseBuffer, [$.$double]);
+    for (t1 = _phaserBuffer.length, i = t1 - 1; i > -1; --i)
+      _phaserBuffer[i] = 0;
+    for (t2 = _noiseBuffer.length, i = t2 - 1, i0 = i; i0 > -1; --i0)
+      _noiseBuffer[i0] = $.C__Random.nextDouble$0() * 2 - 1;
+    for (t3 = $.getInterceptor$ax(buffer), t4 = $.getInterceptor(_waveType), t5 = _hpFilterDeltaCutoff !== 0, t6 = _vibratoAmplitude > 0, t7 = $.getInterceptor$n(_minFreqency), t8 = _repeatLimit !== 0, _finished = false, _envelopeTime = 0, _envelopeVolume = 0, _hpFilterPos = 0, _lpFilterDeltaPos = 0, _lpFilterOldPos = 0, _lpFilterPos = 0, _pos = 0, _sample = 0, _vibratoPhase = 0, _phase = 0, _envelopeStage = 0, _phaserPos = 0, _phaserInt = 0, _repeatTime = 0, i0 = 0; $.JSNumber_methods.$lt(i0, $length); ++i0) {
+      if (_finished)
+        return true;
+      if (t8) {
+        ++_repeatTime;
+        if (_repeatTime >= _repeatLimit) {
+          this.reset$0(this);
+          _repeatTime = 0;
+        }
+      }
+      if (this._changeLimit !== 0) {
+        t9 = $.$add$ns(this._changeTime, 1);
+        this._changeTime = t9;
+        if ($.JSNumber_methods.$ge(t9, this._changeLimit)) {
+          this._changeLimit = 0;
+          this._period = $.$mul$n(this._period, this._changeAmount);
+        }
+      }
+      this._slide = $.$add$ns(this._slide, this._deltaSlide);
+      this._period = $.$mul$n(this._period, this._slide);
+      if ($.$gt$n(this._period, this._maxPeriod)) {
+        this._period = this._maxPeriod;
+        if (t7.$gt(_minFreqency, 0))
+          _finished = true;
+      }
+      _periodTemp0 = this._period;
+      if (t6) {
+        if (typeof _vibratoSpeed !== "number")
+          throw $.iae(_vibratoSpeed);
+        _vibratoPhase += _vibratoSpeed;
+        _periodTemp0 = $.$mul$n(_periodTemp0, 1 + Math.sin(_vibratoPhase) * _vibratoAmplitude);
+      }
+      _periodTemp = $.toInt$0$n(_periodTemp0);
+      if (_periodTemp < 8)
+        _periodTemp = 8;
+      if (t4.$eq(_waveType, 0) === true) {
+        this._squareDuty = $.$add$ns(this._squareDuty, this._dutySweep);
+        if ($.$lt$n(this._squareDuty, 0))
+          this._squareDuty = 0;
+        else if ($.$gt$n(this._squareDuty, 0.5))
+          this._squareDuty = 0.5;
+      }
+      ++_envelopeTime;
+      if ($.JSNumber_methods.$gt(_envelopeTime, _envelopeLength)) {
+        ++_envelopeStage;
+        switch (_envelopeStage) {
+          case 1:
+            _envelopeLength = this._envelopeLength1;
+            break;
+          case 2:
+            _envelopeLength = this._envelopeLength2;
+            break;
+        }
+        _envelopeTime = 0;
+      }
+      switch (_envelopeStage) {
+        case 0:
+          _envelopeVolume = _envelopeTime * _envelopeOverLength0;
+          break;
+        case 1:
+          if (typeof _sustainPunch !== "number")
+            throw $.iae(_sustainPunch);
+          _envelopeVolume = 1 + (1 - _envelopeTime * _envelopeOverLength1) * 2 * _sustainPunch;
+          break;
+        case 2:
+          _envelopeVolume = 1 - _envelopeTime * _envelopeOverLength2;
+          break;
+        case 3:
+          _finished = true;
+          _envelopeVolume = 0;
+          break;
+      }
+      if (_phaser) {
+        _phaserOffset = $.$add$ns(_phaserOffset, _phaserDeltaOffset);
+        _phaserInt = $.toInt$0$n(_phaserOffset);
+        t9 = $.getInterceptor$n(_phaserInt);
+        if (t9.$lt(_phaserInt, 0))
+          _phaserInt = t9.$negate(_phaserInt);
+        else if (t9.$gt(_phaserInt, 1023))
+          _phaserInt = 1023;
+      }
+      if (_filters && t5) {
+        _hpFilterCutoff = $.$mul$n(_hpFilterCutoff, _hpFilterDeltaCutoff);
+        t9 = $.getInterceptor$n(_hpFilterCutoff);
+        if (t9.$lt(_hpFilterCutoff, 0.00001))
+          _hpFilterCutoff = 0.00001;
+        else if (t9.$gt(_hpFilterCutoff, 0.1))
+          _hpFilterCutoff = 0.1;
+      }
+      for (_superSample = 0, j = 0; j < 8; ++j) {
+        ++_phase;
+        if (_phase >= _periodTemp) {
+          _phase = $.JSNumber_methods.$mod(_phase, _periodTemp);
+          if (t4.$eq(_waveType, 3) === true)
+            for (n = i; n > -1; --n)
+              _noiseBuffer[n] = $.C__Random.nextDouble$0() * 2 - 1;
+        }
+        switch (_waveType) {
+          case 0:
+            _sample = $.JSDouble_methods.$lt(_phase / _periodTemp, this._squareDuty) ? 0.5 : -0.5;
+            break;
+          case 1:
+            _sample = 1 - _phase / _periodTemp * 2;
+            break;
+          case 2:
+            _pos = _phase / _periodTemp;
+            _pos = _pos > 0.5 ? (_pos - 1) * 6.28318531 : _pos * 6.28318531;
+            t9 = 1.27323954 * _pos;
+            t10 = 0.405284735 * _pos;
+            _sample = _pos < 0 ? t9 + t10 * _pos : t9 - t10 * _pos;
+            _sample = _sample < 0 ? 0.225 * (_sample * -_sample - _sample) + _sample : 0.225 * (_sample * _sample - _sample) + _sample;
+            break;
+          case 3:
+            t9 = $.JSNumber_methods.toInt$0($.JSDouble_methods.abs$0(_phase * 32 / _periodTemp));
+            if (t9 !== (t9 | 0))
+              throw $.iae(t9);
+            if (t9 < 0 || t9 >= t2)
+              throw $.ioore(t9);
+            _sample = _noiseBuffer[t9];
+            break;
+        }
+        if (_filters) {
+          _lpFilterCutoff *= _lpFilterDeltaCutoff;
+          if (_lpFilterCutoff < 0)
+            _lpFilterCutoff = 0;
+          else if (_lpFilterCutoff > 0.1)
+            _lpFilterCutoff = 0.1;
+          if (_lpFilterOn) {
+            t9 = $.$mul$n($.$sub$n(_sample, _lpFilterPos), _lpFilterCutoff);
+            if (typeof t9 !== "number")
+              throw $.iae(t9);
+            _lpFilterDeltaPos = (_lpFilterDeltaPos + t9) * _lpFilterDamping;
+            _lpFilterPos0 = _lpFilterPos;
+          } else {
+            _lpFilterPos0 = _sample;
+            _lpFilterDeltaPos = 0;
+          }
+          _lpFilterPos0 = $.$add$ns(_lpFilterPos0, _lpFilterDeltaPos);
+          t9 = $.$sub$n(_lpFilterPos0, _lpFilterPos);
+          if (typeof t9 !== "number")
+            throw $.iae(t9);
+          if (typeof _hpFilterCutoff !== "number")
+            throw $.iae(_hpFilterCutoff);
+          _hpFilterPos = (_hpFilterPos + t9) * (1 - _hpFilterCutoff);
+          _sample = _hpFilterPos;
+          _lpFilterOldPos = _lpFilterPos;
+          _lpFilterPos = _lpFilterPos0;
+        }
+        if (_phaser) {
+          t9 = $.JSNumber_methods.$mod(_phaserPos, 1024);
+          if (t9 !== (t9 | 0))
+            throw $.iae(t9);
+          if (t9 < 0 || t9 >= t1)
+            throw $.ioore(t9);
+          _phaserBuffer[t9] = _sample;
+          if (typeof _phaserInt !== "number")
+            throw $.iae(_phaserInt);
+          t9 = $.JSNumber_methods.$mod(_phaserPos - _phaserInt + 1024, 1024);
+          if (t9 !== (t9 | 0))
+            throw $.iae(t9);
+          if (t9 < 0 || t9 >= t1)
+            throw $.ioore(t9);
+          _sample = $.$add$ns(_sample, _phaserBuffer[t9]);
+          ++_phaserPos;
+        }
+        if (typeof _sample !== "number")
+          throw $.iae(_sample);
+        _superSample += _sample;
+      }
+      if (typeof _masterVolume !== "number")
+        throw $.iae(_masterVolume);
+      _superSample *= 0.125 * _envelopeVolume * _masterVolume;
+      if (_superSample >= 1)
+        _superSample = 1;
+      else if (_superSample <= -1)
+        _superSample = -1;
+      t3.$indexSet(buffer, i0, _superSample);
+    }
+    return false;
+  }
+};
+
+$$.AudioSound = {"": "Object;_liblib11$_source,_clip,_loop,_sourceNode,_pausedTime,_startTime,_scheduledTime,_volume",
+  get$isFinished: function() {
+    var t1 = this._sourceNode;
+    return t1 == null ? false : t1.playbackState === 3;
+  },
+  _setupSourceNodeForPlayback$0: function() {
+    var t1, t2;
+    t1 = this._liblib11$_source;
+    this._sourceNode = t1._manager._context.createBufferSource();
+    t2 = this._clip;
+    if (t2 != null && t2.get$_buffer() != null) {
+      this._sourceNode.buffer = t2.get$_buffer();
+      this._sourceNode.loopStart = 0;
+      this._sourceNode.loopEnd = $.get$duration$x(t2.get$_buffer());
+    }
+    this._sourceNode.gain.value = this._volume;
+    this._sourceNode.loop = this._loop;
+    this._sourceNode.connect(t1._gainNode, 0, 0);
+  },
+  play$1: function(_, when) {
+    var t1 = this._sourceNode;
+    if (t1 != null)
+      $.stop$1$x(t1, 0);
+    this._sourceNode = null;
+    this._setupSourceNodeForPlayback$0();
+    t1 = this._liblib11$_source._manager;
+    this._scheduledTime = $.$add$ns(t1._context.currentTime, when);
+    $.start$1$x(this._sourceNode, this._scheduledTime);
+    this._startTime = t1._context.currentTime;
+  },
+  play$0: function($receiver) {
+    return this.play$1($receiver, 0);
+  },
+  stop$0: function(_) {
+    var t1 = this._sourceNode;
+    if (t1 != null)
+      $.stop$1$x(t1, 0);
+    this._sourceNode = null;
+    this._startTime = null;
+    this._scheduledTime = null;
+    this._pausedTime = null;
+  },
+  AudioSound$_internal$3: function(_source, _clip, _loop) {
+    this._setupSourceNodeForPlayback$0();
+  },
+  $isAudioSound: true
+};
+
+$$.AudioSource = {"": "Object;_manager<,_name,_output,_gainNode,_panNode,_sounds,_mutedVolume,_isPaused,_x,_y,_z,_positional",
+  _setupNodes$0: function() {
+    var t1, t2, t3;
+    this._panNode.disconnect(0);
+    this._gainNode.disconnect(0);
+    t1 = this._positional;
+    t2 = this._gainNode;
+    t3 = this._output;
+    if (t1) {
+      t2.connect(this._panNode, 0, 0);
+      this._panNode.connect(t3, 0, 0);
+    } else
+      t2.connect(t3, 0, 0);
+  },
+  set$positional: function(b) {
+    if (b !== this._positional) {
+      this._positional = b;
+      this._setupNodes$0();
+    }
+  },
+  get$volume: function(_) {
+    return this._gainNode.gain.value;
+  },
+  set$volume: function(_, v) {
+    this._gainNode.gain.value = v;
+  },
+  get$mute: function() {
+    return this._mutedVolume != null;
+  },
+  set$mute: function(b) {
+    var t1;
+    if (b === true) {
+      if (this._mutedVolume != null)
+        return;
+      this._mutedVolume = this.get$volume(this);
+      this.set$volume(this, 0);
+    } else {
+      t1 = this._mutedVolume;
+      if (t1 == null)
+        return;
+      this.set$volume(this, t1);
+      this._mutedVolume = null;
+    }
+  },
+  get$x: function(_) {
+    return this._x;
+  },
+  get$y: function(_) {
+    return this._y;
+  },
+  AudioSource$_internal$3: function(_manager, _name, _output) {
+    var t1 = this._manager;
+    this._gainNode = $.createGain$0$x(t1._context);
+    this._panNode = t1._context.createPanner();
+    this._panNode.coneOuterGain = 1;
+    this._setupNodes$0();
+    t1 = $.List_List($, $.AudioSound);
+    $.setRuntimeTypeInfo(t1, [$.AudioSound]);
+    this._sounds = t1;
+  },
+  $isAudioSource: true
 };
 
 $$.ChangeNotification = {"": "Object;oldValue>,newValue>,changes<",
@@ -8287,6 +9367,9 @@ $$.WebComponent = {"": "Object;",
   set$xtag: function(_, value) {
     $.set$xtag$x(this.get$host(this), value);
   },
+  get$onChange: function(_) {
+    return $.get$onChange$x(this.get$host(this));
+  },
   get$onClick: function(_) {
     return $.get$onClick$x(this.get$host(this));
   },
@@ -8574,7 +9657,7 @@ $$.BRElement = {"": "Element;"};
 
 $$.BaseElement = {"": "Element;href%,target="};
 
-$$.BeforeLoadEvent = {"": "Event;"};
+$$.BeforeLoadEvent = {"": "Event;url="};
 
 $$.Blob = {"": "Interceptor;type="};
 
@@ -8700,6 +9783,9 @@ $$.Document = {"": "Node;",
       return receiver.webkitRegister($name, $.convertDartToNative_Dictionary(options));
     return receiver.webkitRegister($name);
   },
+  get$onChange: function(receiver) {
+    return $.EventStreamProvider_change.forTarget$1(receiver);
+  },
   get$onClick: function(receiver) {
     return $.EventStreamProvider_click.forTarget$1(receiver);
   },
@@ -8802,6 +9888,9 @@ $$.Element = {"": "Node;xtag%,$$dom_children:children=,id=,innerHtml:innerHTML},
   createShadowRoot$0: function(receiver) {
     return receiver.webkitCreateShadowRoot();
   },
+  get$onChange: function(receiver) {
+    return $.EventStreamProvider_change.forTarget$1(receiver);
+  },
   get$onClick: function(receiver) {
     return $.EventStreamProvider_click.forTarget$1(receiver);
   },
@@ -8864,6 +9953,109 @@ $$.FileException = {"": "Interceptor;",
   toString$0: function(receiver) {
     return receiver.toString();
   }
+};
+
+$$.Float32Array = {"": "ArrayBufferView;",
+  get$length: function(receiver) {
+    return receiver.length;
+  },
+  $index: function(receiver, index) {
+    return receiver[index];
+  },
+  $indexSet: function(receiver, index, value) {
+    receiver[index] = value;
+  },
+  get$iterator: function(receiver) {
+    return $.FixedSizeListIterator$(receiver);
+  },
+  fold$2: function(receiver, initialValue, combine) {
+    var t1;
+    for (t1 = this.get$iterator(receiver); t1.moveNext$0();)
+      initialValue = combine.call$2(initialValue, t1.get$current());
+    return initialValue;
+  },
+  forEach$1: function(receiver, f) {
+    var t1;
+    for (t1 = this.get$iterator(receiver); t1.moveNext$0();)
+      f.call$1(t1.get$current());
+    return;
+  },
+  map$1: function(receiver, f) {
+    return $.MappedListIterable$(receiver, f, null, null);
+  },
+  where$1: function(receiver, f) {
+    return $.WhereIterable$(receiver, f, null);
+  },
+  toList$1$growable: function(receiver, growable) {
+    return $.List_List$from(receiver, growable, $.num);
+  },
+  toList$0: function($receiver) {
+    return this.toList$1$growable($receiver, true);
+  },
+  get$isEmpty: function(receiver) {
+    return this.get$length(receiver) === 0;
+  },
+  skip$1: function(receiver, n) {
+    return $.SubListIterable$(receiver, n, null, null);
+  },
+  elementAt$1: function(receiver, index) {
+    return receiver[index];
+  },
+  add$1: function(receiver, value) {
+    throw $.wrapException($.UnsupportedError$("Cannot add to immutable List."));
+  },
+  addAll$1: function(receiver, iterable) {
+    throw $.wrapException($.UnsupportedError$("Cannot add to immutable List."));
+  },
+  set$length: function(receiver, value) {
+    throw $.wrapException($.UnsupportedError$("Cannot resize immutable List."));
+  },
+  clear$0: function(receiver) {
+    throw $.wrapException($.UnsupportedError$("Cannot clear immutable List."));
+  },
+  get$reversed: function(receiver) {
+    return $.IterableMixinWorkaround_reversedList(receiver);
+  },
+  sort$1: function(receiver, compare) {
+    throw $.wrapException($.UnsupportedError$("Cannot sort immutable List."));
+  },
+  lastIndexOf$2: function(receiver, element, start) {
+    if (start == null)
+      start = this.get$length(receiver) - 1;
+    return $.Lists_lastIndexOf(receiver, element, start);
+  },
+  lastIndexOf$1: function($receiver, element) {
+    return this.lastIndexOf$2($receiver, element, null);
+  },
+  removeLast$0: function(receiver) {
+    throw $.wrapException($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  remove$1: function(receiver, object) {
+    throw $.wrapException($.UnsupportedError$("Cannot remove from immutable List."));
+  },
+  get$remove: function(receiver) {
+    return new $.BoundClosure$i1(this, "remove$1", receiver);
+  },
+  sublist$2: function(receiver, start, end) {
+    if (end == null)
+      end = this.get$length(receiver);
+    return $.Lists_getRange(receiver, start, end, []);
+  },
+  sublist$1: function($receiver, start) {
+    return this.sublist$2($receiver, start, null);
+  },
+  toString$0: function(receiver) {
+    var buffer = $.StringBuffer$("[");
+    buffer.writeAll$2(receiver, ", ");
+    buffer.write$1("]");
+    return buffer.toString$0(buffer);
+  },
+  $isList: true,
+  $asList: function () { return [$.$double]; },
+  $isIterable: true,
+  $asIterable: function () { return [$.$double]; },
+  $isJavaScriptIndexingBehavior: true,
+  $asJavaScriptIndexingBehavior: null
 };
 
 $$.FocusEvent = {"": "UIEvent;"};
@@ -8942,6 +10134,14 @@ $$.HtmlCollection = {"": "Interceptor;",
   sort$1: function(receiver, compare) {
     throw $.wrapException($.UnsupportedError$("Cannot sort immutable List."));
   },
+  lastIndexOf$2: function(receiver, element, start) {
+    if (start == null)
+      start = this.get$length(receiver) - 1;
+    return $.Lists_lastIndexOf(receiver, element, start);
+  },
+  lastIndexOf$1: function($receiver, element) {
+    return this.lastIndexOf$2($receiver, element, null);
+  },
   removeLast$0: function(receiver) {
     throw $.wrapException($.UnsupportedError$("Cannot remove from immutable List."));
   },
@@ -8991,6 +10191,9 @@ $$.HttpRequest = {"": "EventTarget;responseText=",
   open$5$async$password$user: function(receiver, method, url, async, password, user) {
     return receiver.open(method, url, async, user, password);
   },
+  open$2: function($receiver, method, url) {
+    return $receiver.open(method, url);
+  },
   open$3$async: function($receiver, method, url, async) {
     return $receiver.open(method, url, async);
   },
@@ -8999,6 +10202,9 @@ $$.HttpRequest = {"": "EventTarget;responseText=",
   },
   send$1: function(receiver, data) {
     return receiver.send(data);
+  },
+  get$onAbort: function(receiver) {
+    return $.EventStreamProvider_abort.forTarget$1(receiver);
   },
   get$onError: function(receiver) {
     return $.EventStreamProvider_error.forTarget$1(receiver);
@@ -9037,7 +10243,7 @@ $$.IFrameElement = {"": "Element;height=,width="};
 
 $$.ImageElement = {"": "Element;height=,width=,x=,y="};
 
-$$.InputElement = {"": "Element;height=,placeholder},type=,value%,width=",
+$$.InputElement = {"": "Element;checked%,height=,placeholder},type=,value%,width=",
   step$1: function($receiver, arg0) {
     return this.step.call$1(arg0);
   },
@@ -9073,7 +10279,11 @@ $$.Location = {"": "Interceptor;hash%,href%",
 
 $$.MapElement = {"": "Element;"};
 
-$$.MediaElement = {"": "Element;"};
+$$.MediaElement = {"": "Element;duration=",
+  load$0: function(receiver) {
+    return receiver.load();
+  }
+};
 
 $$.MediaError = {"": "Interceptor;"};
 
@@ -9265,6 +10475,14 @@ $$.NodeList = {"": "Interceptor;",
   sort$1: function(receiver, compare) {
     throw $.wrapException($.UnsupportedError$("Cannot sort immutable List."));
   },
+  lastIndexOf$2: function(receiver, element, start) {
+    if (start == null)
+      start = this.get$length(receiver) - 1;
+    return $.Lists_lastIndexOf(receiver, element, start);
+  },
+  lastIndexOf$1: function($receiver, element) {
+    return this.lastIndexOf$2($receiver, element, null);
+  },
   removeLast$0: function(receiver) {
     throw $.wrapException($.UnsupportedError$("Cannot remove from immutable List."));
   },
@@ -9370,7 +10588,7 @@ $$.SpeechRecognitionError = {"": "Event;"};
 
 $$.SpeechRecognitionEvent = {"": "Event;"};
 
-$$.StorageEvent = {"": "Event;key=,newValue=,oldValue="};
+$$.StorageEvent = {"": "Event;key=,newValue=,oldValue=,url="};
 
 $$.StyleElement = {"": "Element;type="};
 
@@ -9491,6 +10709,14 @@ $$.Uint8Array = {"": "ArrayBufferView;",
   sort$1: function(receiver, compare) {
     throw $.wrapException($.UnsupportedError$("Cannot sort immutable List."));
   },
+  lastIndexOf$2: function(receiver, element, start) {
+    if (start == null)
+      start = this.get$length(receiver) - 1;
+    return $.Lists_lastIndexOf(receiver, element, start);
+  },
+  lastIndexOf$1: function($receiver, element) {
+    return this.lastIndexOf$2($receiver, element, null);
+  },
   removeLast$0: function(receiver) {
     throw $.wrapException($.UnsupportedError$("Cannot remove from immutable List."));
   },
@@ -9583,6 +10809,14 @@ $$.Uint8ClampedArray = {"": "Uint8Array;",
   sort$1: function(receiver, compare) {
     throw $.wrapException($.UnsupportedError$("Cannot sort immutable List."));
   },
+  lastIndexOf$2: function(receiver, element, start) {
+    if (start == null)
+      start = this.get$length(receiver) - 1;
+    return $.Lists_lastIndexOf(receiver, element, start);
+  },
+  lastIndexOf$1: function($receiver, element) {
+    return this.lastIndexOf$2($receiver, element, null);
+  },
   removeLast$0: function(receiver) {
     throw $.wrapException($.UnsupportedError$("Cannot remove from immutable List."));
   },
@@ -9649,6 +10883,9 @@ $$.Window = {"": "EventTarget;navigator=",
   },
   toString$0: function(receiver) {
     return receiver.toString();
+  },
+  get$onChange: function(receiver) {
+    return $.EventStreamProvider_change.forTarget$1(receiver);
   },
   get$onClick: function(receiver) {
     return $.EventStreamProvider_click.forTarget$1(receiver);
@@ -9733,6 +10970,14 @@ $$._NamedNodeMap = {"": "Interceptor;",
   },
   sort$1: function(receiver, compare) {
     throw $.wrapException($.UnsupportedError$("Cannot sort immutable List."));
+  },
+  lastIndexOf$2: function(receiver, element, start) {
+    if (start == null)
+      start = this.get$length(receiver) - 1;
+    return $.Lists_lastIndexOf(receiver, element, start);
+  },
+  lastIndexOf$1: function($receiver, element) {
+    return this.lastIndexOf$2($receiver, element, null);
   },
   removeLast$0: function(receiver) {
     throw $.wrapException($.UnsupportedError$("Cannot remove from immutable List."));
@@ -9957,9 +11202,75 @@ $$._GradientElement = {"": "StyledElement;href="};
 
 $$._SVGComponentTransferFunctionElement = {"": "SvgElement;"};
 
+$$.AudioBuffer = {"": "Interceptor;duration=,length="};
+
+$$.AudioBufferSourceNode = {"": "AudioSourceNode;",
+  start$3: function(receiver, when, grainOffset, grainDuration) {
+    var t1, t2;
+    t1 = $ === grainOffset;
+    if (t1)
+      grainOffset = null;
+    t1 = !t1;
+    t2 = $ === grainDuration;
+    if (t2)
+      grainDuration = null;
+    t2 = !t2;
+    if (!!receiver.start)
+      if (t2)
+        receiver.start(when, grainOffset, grainDuration);
+      else if (t1)
+        receiver.start(when, grainOffset);
+      else
+        receiver.start(when);
+    else if (t2)
+      receiver.noteOn(when, grainOffset, grainDuration);
+    else if (t1)
+      receiver.noteOn(when, grainOffset);
+    else
+      receiver.noteOn(when);
+  },
+  start$1: function($receiver, when) {
+    return this.start$3($receiver, when, $, $);
+  },
+  stop$1: function(receiver, when) {
+    if (!!receiver.stop)
+      receiver.stop(when);
+    else
+      receiver.noteOff(when);
+  }
+};
+
+$$.AudioContext = {"": "EventTarget;",
+  decodeAudioData$3: function(receiver, audioData, successCallback, errorCallback) {
+    return receiver.decodeAudioData(audioData, $.convertDartClosureToJS(successCallback, 1), $.convertDartClosureToJS(errorCallback, 1));
+  },
+  createGain$0: function(receiver) {
+    if (receiver.createGain !== undefined)
+      return receiver.createGain();
+    else
+      return receiver.createGainNode();
+  }
+};
+
+$$.AudioDestinationNode = {"": "AudioNode;"};
+
+$$.AudioListener = {"": "Interceptor;"};
+
+$$.AudioNode = {"": "Interceptor;"};
+
+$$.AudioParam = {"": "Interceptor;value%"};
+
 $$.AudioProcessingEvent = {"": "Event;"};
 
+$$.AudioSourceNode = {"": "AudioNode;"};
+
+$$.GainNode = {"": "AudioNode;"};
+
 $$.OfflineAudioCompletionEvent = {"": "Event;"};
+
+$$.OfflineAudioContext = {"": "AudioContext;"};
+
+$$.PannerNode = {"": "AudioNode;"};
 
 $$.ContextEvent = {"": "Event;"};
 
@@ -10050,6 +11361,42 @@ $.Arrays_copy$bailout = function(state0, src, srcStart, dst, dstStart, count) {
   else
     for (t2 = $.getInterceptor$asx(src), j = dstStart, i = srcStart; t3 = $.getInterceptor$n(i), t3.$lt(i, t1.$add(srcStart, count)); i = t3.$add(i, 1), j = $.$add$ns(j, 1))
       $.JSArray_methods.$indexSet(dst, j, t2.$index(src, i));
+};
+
+$.Arrays_lastIndexOf = function(a, element, startIndex) {
+  var t1, i;
+  if (startIndex !== (startIndex | 0))
+    return $.Arrays_lastIndexOf$bailout(1, a, element, startIndex);
+  if (startIndex < 0)
+    return -1;
+  t1 = a.length;
+  if (startIndex >= t1)
+    startIndex = t1 - 1;
+  for (i = startIndex; i >= 0; --i) {
+    if (i >= a.length)
+      throw $.ioore(i);
+    if ($.$eq(a[i], element) === true)
+      return i;
+  }
+  return -1;
+};
+
+$.Arrays_lastIndexOf$bailout = function(state0, a, element, startIndex) {
+  var t1, i;
+  t1 = $.getInterceptor$n(startIndex);
+  if (t1.$lt(startIndex, 0))
+    return -1;
+  if (t1.$ge(startIndex, a.length))
+    startIndex = a.length - 1;
+  for (i = startIndex; $.$ge$n(i, 0); --i) {
+    if (i !== (i | 0))
+      throw $.iae(i);
+    if (i < 0 || i >= a.length)
+      throw $.ioore(i);
+    if ($.$eq(a[i], element) === true)
+      return i;
+  }
+  return -1;
 };
 
 $.SubListIterable$ = function(_iterable, _start, _endOrLength, E) {
@@ -11226,29 +12573,23 @@ $.Primitives_parseInt = function(source, radix, handleError) {
     }
     radix = 10;
   } else {
-    throw $.wrapException($.ArgumentError$("Radix is not an integer"));
-    if ($.JSNull_methods.$lt(radix, 2) || $.JSNull_methods.$gt(radix, 36))
-      throw $.wrapException($.RangeError$("Radix " + $.S(radix) + " not in range 2..36"));
+    if (typeof radix !== "number" || Math.floor(radix) !== radix)
+      throw $.wrapException($.ArgumentError$("Radix is not an integer"));
+    if (radix < 2 || radix > 36)
+      throw $.wrapException($.RangeError$("Radix " + radix + " not in range 2..36"));
     t1 = $.getInterceptor(match);
     if (match != null) {
-      if (false)
+      if (radix === 10 && t1.$index(match, 3) != null)
         return parseInt(source, 10);
-      if ($.JSNull_methods.$lt(radix, 10) || t1.$index(match, 3) == null) {
-        if ($.JSNull_methods.$le(radix, 10)) {
-          if (typeof radix !== "number")
-            throw $.iae(radix);
-          maxCharCode = 48 + radix - 1;
-        } else {
-          if (typeof radix !== "number")
-            throw $.iae(radix);
-          maxCharCode = 97 + radix - 10 - 1;
-        }
+      if (radix < 10 || t1.$index(match, 3) == null) {
+        maxCharCode = radix <= 10 ? 48 + radix - 1 : 97 + radix - 10 - 1;
         digitsPart = $.toLowerCase$0$s(t1.$index(match, 1));
         for (i = 0; i < digitsPart.length; ++i)
           if ($.JSString_methods.codeUnitAt$1(digitsPart, i) > maxCharCode)
             return handleError.call$1(source);
       }
     }
+    radix = radix;
   }
   if (match == null)
     return handleError.call$1(source);
@@ -11257,12 +12598,14 @@ $.Primitives_parseInt = function(source, radix, handleError) {
 
 $.Primitives_parseDouble = function(source, handleError) {
   var result;
+  if (typeof source !== "string")
+    $.throwExpression($.ArgumentError$(source));
   if (handleError == null)
     handleError = $.Primitives__throwFormatException;
   if (!/^\s*(?:NaN|[+-]?(?:Infinity|(?:\.\d+|\d+(?:\.\d+)?)(?:[eE][+-]?\d+)?))\s*$/.test(source))
     return handleError.call$1(source);
   result = parseFloat(source);
-  if ($.JSNumber_methods.get$isNaN(result) && source !== "NaN")
+  if ($.JSNumber_methods.get$isNaN(result) && $.$eq(source, "NaN") !== true)
     return handleError.call$1(source);
   return result;
 };
@@ -12054,6 +13397,20 @@ $.Future_Future$value = function(value, T) {
   return $._FutureImpl$immediate(value, T);
 };
 
+$.Future_Future$delayed = function(duration, computation, T) {
+  var t1, future, milliseconds;
+  t1 = {};
+  t1.computation_0 = computation;
+  t1.computation_0;
+  future = $._ThenFuture$(new $.Future_Future$delayed_anon(t1), null, T);
+  t1 = new $.Future_Future$delayed_anon0(future);
+  milliseconds = duration.get$inMilliseconds();
+  if (milliseconds < 0)
+    milliseconds = 0;
+  $.TimerImpl$(milliseconds, t1);
+  return future;
+};
+
 $.Completer_Completer = function(T) {
   return $._CompleterImpl$(T);
 };
@@ -12315,6 +13672,10 @@ $._SplayTreeNodeIterator$ = function(map) {
 
 $.Comparable_compare = function(a, b) {
   return $.compareTo$1$ns(a, b);
+};
+
+$.double_parse = function(source, handleError) {
+  return $.Primitives_parseDouble(source, handleError);
 };
 
 $.Duration$ = function(days, hours, microseconds, milliseconds, minutes, seconds) {
@@ -12779,6 +14140,42 @@ $.FilteredElementList$ = function(node) {
   return new $.FilteredElementList(node, $.get$nodes$x(node));
 };
 
+$.Lists_lastIndexOf = function(a, element, startIndex) {
+  var t1, i;
+  if (typeof a !== "string" && (typeof a !== "object" || a === null || a.constructor !== Array && !$.getInterceptor(a).$isJavaScriptIndexingBehavior))
+    return $.Lists_lastIndexOf$bailout(1, a, element, startIndex);
+  if (typeof startIndex !== "number")
+    return $.Lists_lastIndexOf$bailout(1, a, element, startIndex);
+  if (startIndex < 0)
+    return -1;
+  t1 = a.length;
+  if (startIndex >= t1)
+    startIndex = t1 - 1;
+  for (i = startIndex; i >= 0; --i) {
+    if (i !== (i | 0))
+      throw $.iae(i);
+    if (i < 0 || i >= a.length)
+      throw $.ioore(i);
+    if ($.$eq(a[i], element) === true)
+      return i;
+  }
+  return -1;
+};
+
+$.Lists_lastIndexOf$bailout = function(state0, a, element, startIndex) {
+  var t1, t2, i;
+  t1 = $.getInterceptor$n(startIndex);
+  if (t1.$lt(startIndex, 0))
+    return -1;
+  t2 = $.getInterceptor$asx(a);
+  if (t1.$ge(startIndex, t2.get$length(a)))
+    startIndex = $.$sub$n(t2.get$length(a), 1);
+  for (i = startIndex; t1 = $.getInterceptor$n(i), t1.$ge(i, 0); i = t1.$sub(i, 1))
+    if ($.$eq(t2.$index(a, i), element) === true)
+      return i;
+  return -1;
+};
+
 $.Lists_getRange = function(a, start, end, accumulator) {
   var i;
   if (typeof a !== "string" && (typeof a !== "object" || a === null || a.constructor !== Array && !$.getInterceptor(a).$isJavaScriptIndexingBehavior))
@@ -12898,6 +14295,10 @@ $.Uri__parseIntOrZero = function(val) {
     return 0;
 };
 
+$.AudioContext_AudioContext = function() {
+  return new (window.AudioContext || window.webkitAudioContext)();
+};
+
 $.abbrevsSelected = function(value) {
   if ($.hasObservers($.get$__changes()))
     $.notifyChange($.get$__changes(), 1, "abbrevsSelected", $.get$__$abbrevsSelected(), value);
@@ -12950,6 +14351,22 @@ $.category = function(value) {
   if ($.hasObservers($.get$__changes()))
     $.notifyChange($.get$__changes(), 1, "category", $.__$category, value);
   $.__$category = value;
+};
+
+$.masterMute = function(v) {
+  $._audioManager.set$mute(v);
+};
+
+$.masterVolume = function(v) {
+  $._audioManager.set$masterVolume($.double_parse(v, null));
+};
+
+$.musicVolume = function(v) {
+  $._audioManager.set$musicVolume($.double_parse(v, null));
+};
+
+$.sourceVolume = function(v) {
+  $._audioManager.set$sourceVolume($.double_parse(v, null));
 };
 
 $._setupRoutes = function() {
@@ -13091,8 +14508,34 @@ $._finish = function() {
   }
 };
 
+$.findBaseUrl = function() {
+  var $location, t1, slashIndex;
+  $location = $.get$href$x($.get$location$x(window));
+  t1 = $.getInterceptor$asx($location);
+  slashIndex = t1.lastIndexOf$1($location, "/");
+  if ($.$lt$n(slashIndex, 0))
+    return "/";
+  else
+    return t1.substring$2($location, 0, slashIndex);
+};
+
+$.newAudioManager = function() {
+  var audioManager, musicClip;
+  audioManager = $.AudioManager$($.findBaseUrl());
+  audioManager.set$mute(false);
+  audioManager.set$masterVolume(1);
+  audioManager.set$musicVolume(0.5);
+  audioManager.set$sourceVolume(0.9);
+  musicClip = audioManager.makeClip$2("music", "music.ogg");
+  $.load$0$x(musicClip).then$1(new $.newAudioManager_anon(audioManager, musicClip));
+  $.Primitives_printString("music ....");
+  audioManager.makeSource$1("Source A").set$positional(false);
+  $.load$0$x(audioManager.makeClip$2("coin_sound", "sfxr:" + "1,,0.0769,0.5058,0.3492,0.4109,,,,,,0.3014,0.5982,,,,,,1,,,,,0.5"));
+  return audioManager;
+};
+
 $.init_autogenerated = function() {
-  var t1, _root, __html0, e, __html2, e0, __html4, __t, t2, t3, __e5, __e1, __binding0, __e11, __e7, __binding6, __e15, __binding14, __e17, __binding16, __e19, __binding18, __e21, __binding20, __e31, __e27, __binding25, __binding26, __e29, __binding28;
+  var t1, _root, __html0, e, __html2, e0, __html4, __t, t2, t3, __e5, __e1, __binding0, __e11, __e7, __binding6, __e16, __e20, __binding19, __e22, __binding21, __e24, __binding23, __e26, __binding25, __e36, __e32, __binding30, __binding31, __e34, __binding33;
   t1 = {};
   _root = document.body;
   __html0 = $._ElementFactoryProvider_createElement_html("<b class=\"caret\"></b>");
@@ -13101,6 +14544,10 @@ $.init_autogenerated = function() {
   e0 = document.createElement("a");
   __html4 = $._ElementFactoryProvider_createElement_html("<div template=\"\" repeat=\"abbrev in abbrevsSelected\" class=\"abbrev \" style=\"top:50%; left:50%\"></div>");
   t1.__e12_2 = null;
+  t1.__e13_3 = null;
+  t1.__e14_4 = null;
+  t1.__e15_5 = null;
+  t1.__e17_6 = null;
   __t = $.Template$(_root);
   t2 = $.getInterceptor$x(_root);
   t3 = t2.get$nodes(_root);
@@ -13124,43 +14571,61 @@ $.init_autogenerated = function() {
   t3.set$host(t3, __e11);
   __t.component$1(t3);
   t3 = t2.get$nodes(_root);
-  t1.__e12_2 = $.$index$asx($.get$nodes$x(t3.$index(t3, 3)), 3);
-  __t.listen$2($.get$onInput$x(t1.__e12_2), new $.init_autogenerated_anon5(t1));
-  __t.bind$3(new $.init_autogenerated_anon6(), new $.init_autogenerated_anon7(t1), false);
-  __t.oneWayBind$4(new $.init_autogenerated_anon8(), new $.init_autogenerated_anon9(t1), false, false);
+  __e16 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x(t3.$index(t3, 1)), 1)), 1)), 1)), 5)), 3)), 1);
+  t3 = $.getInterceptor$x(__e16);
+  t1.__e12_2 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx(t3.get$nodes(__e16), 3)), 1)), 2);
+  __t.listen$2($.get$onChange$x(t1.__e12_2), new $.init_autogenerated_anon5(t1));
+  __t.oneWayBind$4(new $.init_autogenerated_anon6(), new $.init_autogenerated_anon7(t1), false, false);
+  t1.__e13_3 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx(t3.get$nodes(__e16), 3)), 3)), 1);
+  __t.listen$2($.get$onInput$x(t1.__e13_3), new $.init_autogenerated_anon8(t1));
+  __t.oneWayBind$4(new $.init_autogenerated_anon9(), new $.init_autogenerated_anon10(t1), false, false);
+  t1.__e14_4 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx(t3.get$nodes(__e16), 3)), 5)), 1);
+  __t.listen$2($.get$onInput$x(t1.__e14_4), new $.init_autogenerated_anon11(t1));
+  __t.oneWayBind$4(new $.init_autogenerated_anon12(), new $.init_autogenerated_anon13(t1), false, false);
+  t1.__e15_5 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx(t3.get$nodes(__e16), 3)), 7)), 1);
+  __t.listen$2($.get$onInput$x(t1.__e15_5), new $.init_autogenerated_anon14(t1));
+  __t.oneWayBind$4(new $.init_autogenerated_anon15(), new $.init_autogenerated_anon16(t1), false, false);
+  t3 = $.XDropdown$();
+  t3.set$host(t3, __e16);
+  __t.component$1(t3);
+  t3 = t2.get$nodes(_root);
+  t1.__e17_6 = $.$index$asx($.get$nodes$x(t3.$index(t3, 3)), 3);
+  __t.listen$2($.get$onInput$x(t1.__e17_6), new $.init_autogenerated_anon17(t1));
+  __t.bind$3(new $.init_autogenerated_anon18(), new $.init_autogenerated_anon19(t1), false);
+  __t.oneWayBind$4(new $.init_autogenerated_anon20(), new $.init_autogenerated_anon21(t1), false, false);
   t1 = t2.get$nodes(_root);
-  __t.listen$2($.get$onClick$x($.$index$asx($.get$nodes$x(t1.$index(t1, 3)), 5)), new $.init_autogenerated_anon10());
+  __t.listen$2($.get$onClick$x($.$index$asx($.get$nodes$x(t1.$index(t1, 3)), 5)), new $.init_autogenerated_anon22());
   t1 = t2.get$nodes(_root);
-  __e15 = $.$index$asx($.get$nodes$x(t1.$index(t1, 3)), 7);
-  __binding14 = __t.contentBind$2(new $.init_autogenerated_anon11(), false);
-  $.add$1$ax($.get$nodes$x(__e15), __binding14);
+  __e20 = $.$index$asx($.get$nodes$x(t1.$index(t1, 3)), 7);
+  __binding19 = __t.contentBind$2(new $.init_autogenerated_anon23(), false);
+  $.add$1$ax($.get$nodes$x(__e20), __binding19);
   t1 = t2.get$nodes(_root);
-  __e17 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x(t1.$index(t1, 5)), 1)), 1)), 2);
-  __binding16 = __t.contentBind$2(new $.init_autogenerated_anon12(), false);
-  $.add$1$ax($.get$nodes$x(__e17), __binding16);
+  __e22 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x(t1.$index(t1, 5)), 1)), 1)), 2);
+  __binding21 = __t.contentBind$2(new $.init_autogenerated_anon24(), false);
+  $.add$1$ax($.get$nodes$x(__e22), __binding21);
   t1 = t2.get$nodes(_root);
-  __e19 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x(t1.$index(t1, 5)), 3)), 1)), 2);
-  __binding18 = __t.contentBind$2(new $.init_autogenerated_anon13(), false);
-  $.add$1$ax($.get$nodes$x(__e19), __binding18);
+  __e24 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x(t1.$index(t1, 5)), 3)), 1)), 2);
+  __binding23 = __t.contentBind$2(new $.init_autogenerated_anon25(), false);
+  $.add$1$ax($.get$nodes$x(__e24), __binding23);
   t1 = t2.get$nodes(_root);
-  __e21 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x(t1.$index(t1, 5)), 5)), 1)), 2);
-  __binding20 = __t.contentBind$2(new $.init_autogenerated_anon14(), false);
-  $.add$1$ax($.get$nodes$x(__e21), __binding20);
+  __e26 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x(t1.$index(t1, 5)), 5)), 1)), 2);
+  __binding25 = __t.contentBind$2(new $.init_autogenerated_anon26(), false);
+  $.add$1$ax($.get$nodes$x(__e26), __binding25);
   t1 = t2.get$nodes(_root);
-  __t.loop$3(__t, $.$index$asx($.get$nodes$x(t1.$index(t1, 7)), 1), new $.init_autogenerated_anon15(), new $.init_autogenerated_anon16(__html4));
+  __t.loop$3(__t, $.$index$asx($.get$nodes$x(t1.$index(t1, 7)), 1), new $.init_autogenerated_anon27(), new $.init_autogenerated_anon28(__html4));
   t2 = t2.get$nodes(_root);
-  __e31 = t2.$index(t2, 9);
-  t2 = $.getInterceptor$x(__e31);
-  __e27 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx(t2.get$nodes(__e31), 1)), 1)), 1)), 1)), 3);
-  __binding25 = __t.contentBind$2(new $.init_autogenerated_anon17(), false);
-  __binding26 = __t.contentBind$2(new $.init_autogenerated_anon18(), false);
-  $.addAll$1$ax($.get$nodes$x(__e27), [__binding25, document.createTextNode(" ("), __binding26, document.createTextNode(")")]);
-  __e29 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx(t2.get$nodes(__e31), 1)), 1)), 1)), 3)), 3);
-  __binding28 = __t.contentBind$2(new $.init_autogenerated_anon19(), false);
-  $.add$1$ax($.get$nodes$x(__e29), __binding28);
-  __t.listen$2($.get$onClick$x($.$index$asx($.get$nodes$x($.$index$asx(t2.get$nodes(__e31), 3)), 1)), new $.init_autogenerated_anon20());
+  __e36 = t2.$index(t2, 9);
+  t2 = $.getInterceptor$x(__e36);
+  __e32 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx(t2.get$nodes(__e36), 1)), 1)), 1)), 1)), 3);
+  __binding30 = __t.contentBind$2(new $.init_autogenerated_anon29(), false);
+  __binding31 = __t.contentBind$2(new $.init_autogenerated_anon30(), false);
+  $.addAll$1$ax($.get$nodes$x(__e32), [__binding30, document.createTextNode(" ("), __binding31, document.createTextNode(")")]);
+  __e34 = $.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx($.get$nodes$x($.$index$asx(t2.get$nodes(__e36), 1)), 1)), 1)), 3)), 3);
+  __binding33 = __t.contentBind$2(new $.init_autogenerated_anon31(), false);
+  $.add$1$ax($.get$nodes$x(__e34), __binding33);
+  __t.listen$2($.get$onClick$x($.$index$asx($.get$nodes$x($.$index$asx(t2.get$nodes(__e36), 3)), 1)), new $.init_autogenerated_anon32());
   t2 = $.XModal$();
-  t2.set$host(t2, __e31);
+  t2.set$host(t2, __e36);
   __t.component$1(t2);
   __t.create$0();
   __t.insert$0(__t);
@@ -13172,6 +14637,7 @@ $.main = function() {
   $.pFastest = $.PlayerIA$("pFastest");
   $.pSlowest = $.PlayerIA$("pSlowest");
   $._setupRoutes();
+  $._audioManager = $.newAudioManager();
   $.init_autogenerated();
 };
 
@@ -13307,6 +14773,65 @@ $.Player$ = function(id) {
 $.PlayerIA$ = function(id) {
   var t1 = new $.PlayerIA(null, 0, id, null, null, null, null, null, -1);
   t1.Player$1(id);
+  return t1;
+};
+
+$.AudioClip$_internal = function(_manager, _name, _url) {
+  return new $.AudioClip(_manager, _name, _url, null, false, "", false, false);
+};
+
+$.AudioManager$ = function(baseURL) {
+  var t1 = new $.AudioManager(null, null, null, null, null, null, baseURL, $.Map_Map($.String, $.AudioClip), $.Map_Map($.String, $.AudioSource), null, null, false, false);
+  t1.AudioManager$1(baseURL);
+  return t1;
+};
+
+$.AudioMusic$_internal = function(_manager, output) {
+  var t1 = new $.AudioMusic(_manager, null, null, null);
+  t1.AudioMusic$_internal$2(_manager, output);
+  return t1;
+};
+
+$.SfxrParams$fromString = function(string) {
+  var t1 = new $.SfxrParams(0, 0, 0, 0, 0, 0.3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+  t1.SfxrParams$fromString$1(string);
+  return t1;
+};
+
+$.SfxrParams__toInt = function(v) {
+  if (v == null || $.$eq($.get$length$asx(v), 0) === true)
+    return 0;
+  return $.Primitives_parseInt(v, 10, null);
+};
+
+$.SfxrParams__toDouble = function(v) {
+  if (v == null || $.$eq($.get$length$asx(v), 0) === true)
+    return 0;
+  return $.Primitives_parseDouble(v, null);
+};
+
+$.SfxrSynth$ = function(_params) {
+  return new $.SfxrSynth(_params, null, null, null, null, null, null, null, null, null, null, null, null);
+};
+
+$.SfxrSynth_toAudioBuffer = function(audioContext, data) {
+  var synth, envelopeFullLength, buffer;
+  synth = $.SfxrSynth$($.SfxrParams$fromString(data));
+  envelopeFullLength = synth.totalReset$0();
+  buffer = audioContext.createBuffer(2, envelopeFullLength, 44100);
+  synth.synthWave$2(buffer.getChannelData(0), envelopeFullLength);
+  return buffer;
+};
+
+$.AudioSound$_internal = function(_source, _clip, _loop) {
+  var t1 = new $.AudioSound(_source, _clip, _loop, null, null, null, null, 1);
+  t1.AudioSound$_internal$3(_source, _clip, _loop);
+  return t1;
+};
+
+$.AudioSource$_internal = function(_manager, _name, _output) {
+  var t1 = new $.AudioSource(_manager, _name, _output, null, null, null, null, false, 0, 0, 0, true);
+  t1.AudioSource$_internal$3(_manager, _name, _output);
   return t1;
 };
 
@@ -14078,10 +15603,11 @@ $.ShowHide__finishHide.$name = "ShowHide__finishHide";
 $.String = {builtin$cls: "String"};
 $.ReceivePort = {builtin$cls: "ReceivePort"};
 $.bool = {builtin$cls: "bool"};
+$.$double = {builtin$cls: "double"};
 $.$int = {builtin$cls: "int"};
-$.List = {builtin$cls: "List"};
-$.num = {builtin$cls: "num"};
 $._ManagerStub = {builtin$cls: "_ManagerStub"};
+$.num = {builtin$cls: "num"};
+$.List = {builtin$cls: "List"};
 $.Match = {builtin$cls: "Match"};
 $.String.$isString = true;
 Isolate.makeConstantList = function(list) {
@@ -14130,9 +15656,11 @@ $.Duration_1000 = new $.Duration(1000);
 $.Orientation_vertical = new $.Orientation("vertical");
 $.JSInt_methods = $.JSInt.prototype;
 $.C__Random = new $._Random();
+$.EventStreamProvider_change = new $.EventStreamProvider("change");
 $.VerticalAlignment_middle = new $.VerticalAlignment("middle");
 $.C_ShowHideEffect = new $.ShowHideEffect();
 $.Duration_500000 = new $.Duration(500000);
+$.EventStreamProvider_abort = new $.EventStreamProvider("abort");
 $.Expando__keyCount = 0;
 $.dispatchPropertyName = "_zzyzx";
 $.lazyPort = null;
@@ -14159,6 +15687,7 @@ $.__$level = 1;
 $._bonusPlayed = -1;
 $._bonusTimer = null;
 $.__$category = "";
+$._audioManager = null;
 $.Observable_$_nextHashCode = 0;
 $._activeObserver = null;
 $.circularNotifyLimit = 100;
@@ -14242,6 +15771,11 @@ $.$mul$n = function(receiver, a0) {
     return receiver * a0;
   return $.getInterceptor$n(receiver).$mul(receiver, a0);
 };
+$.$negate$n = function(receiver) {
+  if (typeof receiver == "number")
+    return -receiver;
+  return $.getInterceptor$n(receiver).$negate(receiver);
+};
 $.$or$n = function(receiver, a0) {
   if (typeof receiver == "number" && typeof a0 == "number")
     return (receiver | a0) >>> 0;
@@ -14282,8 +15816,14 @@ $.compareTo$1$ns = function(receiver, a0) {
 $.contains$2$asx = function(receiver, a0, a1) {
   return $.getInterceptor$asx(receiver).contains$2(receiver, a0, a1);
 };
+$.createGain$0$x = function(receiver) {
+  return $.getInterceptor$x(receiver).createGain$0(receiver);
+};
 $.createShadowRoot$0$x = function(receiver) {
   return $.getInterceptor$x(receiver).createShadowRoot$0(receiver);
+};
+$.decodeAudioData$3$x = function(receiver, a0, a1, a2) {
+  return $.getInterceptor$x(receiver).decodeAudioData$3(receiver, a0, a1, a2);
 };
 $.dispatchEvent$1$x = function(receiver, a0) {
   return $.getInterceptor$x(receiver).dispatchEvent$1(receiver, a0);
@@ -14312,6 +15852,9 @@ $.get$caption$x = function(receiver) {
 $.get$cells$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$cells(receiver);
 };
+$.get$checked$x = function(receiver) {
+  return $.getInterceptor$x(receiver).get$checked(receiver);
+};
 $.get$children$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$children(receiver);
 };
@@ -14338,6 +15881,9 @@ $.get$display$x = function(receiver) {
 };
 $.get$document$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$document(receiver);
+};
+$.get$duration$x = function(receiver) {
+  return $.getInterceptor$x(receiver).get$duration(receiver);
 };
 $.get$hash$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$hash(receiver);
@@ -14383,6 +15929,9 @@ $.get$nextNode$x = function(receiver) {
 };
 $.get$nodes$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$nodes(receiver);
+};
+$.get$onChange$x = function(receiver) {
+  return $.getInterceptor$x(receiver).get$onChange(receiver);
 };
 $.get$onClick$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$onClick(receiver);
@@ -14441,6 +15990,9 @@ $.get$target$x = function(receiver) {
 $.get$type$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$type(receiver);
 };
+$.get$url$x = function(receiver) {
+  return $.getInterceptor$x(receiver).get$url(receiver);
+};
 $.get$value$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$value(receiver);
 };
@@ -14467,6 +16019,12 @@ $.insertAllBefore$2$x = function(receiver, a0, a1) {
 };
 $.insertBefore$2$x = function(receiver, a0, a1) {
   return $.getInterceptor$x(receiver).insertBefore$2(receiver, a0, a1);
+};
+$.lastIndexOf$2$asx = function(receiver, a0, a1) {
+  return $.getInterceptor$asx(receiver).lastIndexOf$2(receiver, a0, a1);
+};
+$.load$0$x = function(receiver) {
+  return $.getInterceptor$x(receiver).load$0(receiver);
 };
 $.map$1$ax = function(receiver, a0) {
   return $.getInterceptor$ax(receiver).map$1(receiver, a0);
@@ -14509,6 +16067,9 @@ $.send$1$x = function(receiver, a0) {
 };
 $.send$2$x = function(receiver, a0, a1) {
   return $.getInterceptor$x(receiver).send$2(receiver, a0, a1);
+};
+$.set$checked$x = function(receiver, value) {
+  return $.getInterceptor$x(receiver).set$checked(receiver, value);
 };
 $.set$display$x = function(receiver, value) {
   return $.getInterceptor$x(receiver).set$display(receiver, value);
@@ -14573,17 +16134,26 @@ $.sort$1$ax = function(receiver, a0) {
 $.split$1$s = function(receiver, a0) {
   return $.getInterceptor$s(receiver).split$1(receiver, a0);
 };
+$.start$1$x = function(receiver, a0) {
+  return $.getInterceptor$x(receiver).start$1(receiver, a0);
+};
 $.startsWith$1$s = function(receiver, a0) {
   return $.getInterceptor$s(receiver).startsWith$1(receiver, a0);
 };
 $.step$1$x = function(receiver, a0) {
   return $.getInterceptor$x(receiver).step$1(receiver, a0);
 };
+$.stop$1$x = function(receiver, a0) {
+  return $.getInterceptor$x(receiver).stop$1(receiver, a0);
+};
 $.sublist$1$ax = function(receiver, a0) {
   return $.getInterceptor$ax(receiver).sublist$1(receiver, a0);
 };
 $.sublist$2$ax = function(receiver, a0, a1) {
   return $.getInterceptor$ax(receiver).sublist$2(receiver, a0, a1);
+};
+$.substring$1$s = function(receiver, a0) {
+  return $.getInterceptor$s(receiver).substring$1(receiver, a0);
 };
 $.toDouble$0$n = function(receiver) {
   return $.getInterceptor$n(receiver).toDouble$0(receiver);
@@ -14878,6 +16448,8 @@ $.defineNativeMethods("File", $.File);
 $.defineNativeMethods("FileError", $.FileError);
 
 $.defineNativeMethods("FileException", $.FileException);
+
+$.defineNativeMethods("Float32Array", $.Float32Array);
 
 $.defineNativeMethods("FocusEvent", $.FocusEvent);
 
@@ -15241,9 +16813,31 @@ $.defineNativeMethodsNonleaf("SVGGradientElement", $._GradientElement);
 
 $.defineNativeMethodsNonleaf("SVGComponentTransferFunctionElement", $._SVGComponentTransferFunctionElement);
 
+$.defineNativeMethods("AudioBuffer", $.AudioBuffer);
+
+$.defineNativeMethods("AudioBufferSourceNode", $.AudioBufferSourceNode);
+
+$.defineNativeMethodsNonleaf("AudioContext", $.AudioContext);
+
+$.defineNativeMethods("AudioDestinationNode", $.AudioDestinationNode);
+
+$.defineNativeMethods("AudioListener", $.AudioListener);
+
+$.defineNativeMethodsNonleaf("AudioNode", $.AudioNode);
+
+$.defineNativeMethods("AudioParam", $.AudioParam);
+
 $.defineNativeMethods("AudioProcessingEvent", $.AudioProcessingEvent);
 
+$.defineNativeMethodsNonleaf("AudioSourceNode", $.AudioSourceNode);
+
+$.defineNativeMethods("GainNode", $.GainNode);
+
 $.defineNativeMethods("OfflineAudioCompletionEvent", $.OfflineAudioCompletionEvent);
+
+$.defineNativeMethods("OfflineAudioContext", $.OfflineAudioContext);
+
+$.defineNativeMethods("PannerNode", $.PannerNode);
 
 $.defineNativeMethods("WebGLContextEvent", $.ContextEvent);
 

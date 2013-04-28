@@ -1,3 +1,4 @@
+/*-------------------- TOOLBAR -----------------------------------------------*/
 /* Icons @import url(http://weloveiconfonts.com/api/?family=fontawesome|fontelico|zocial); */
 
 /* fontawesome */
@@ -13,6 +14,45 @@
 /* zocial */
 [class*="zocial-"]:before {
   font-family: 'zocial', sans-serif;
+}
+.navbar label {
+  display: inline-block;
+  width: 2em;
+  text-align: center;
+}
+.navbar input[type="range"]{
+  -moz-appearance:none;-webkit-appearance:none;-ms-appearance:none;-o-appearance:none;appearance:none;
+  width:130px; height:1px
+;}
+.navbar input::-moz-slider-thumb{
+  -moz-appearance:none;
+  width:12px; height:12px;
+  -moz-border-radius:12px;
+  background-image:-moz-gradient(linear, left top, left bottom, color-stop(0, #fefefe), color-stop(0.49, #dddddd), color-stop(0.51, #d1d1d1), color-stop(1, #a1a1a1) );
+}
+.navbar input::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  width:12px; height:12px;
+  -webkit-border-radius:12px;
+  background-image:-webkit-gradient(linear, left top, left bottom, color-stop(0, #fefefe), color-stop(0.49, #dddddd), color-stop(0.51, #d1d1d1), color-stop(1, #a1a1a1) );
+}
+.navbar input::-ms-slider-thumb{
+  -ms-appearance:none;
+  width:12px; height:12px;
+  -ms-border-radius:12px;
+  background-image:-ms-gradient(linear, left top, left bottom, color-stop(0, #fefefe), color-stop(0.49, #dddddd), color-stop(0.51, #d1d1d1), color-stop(1, #a1a1a1) );
+}
+.navbar input::-o-slider-thumb{
+  -o-appearance:none;
+  width:12px; height:12px;
+  -o-border-radius:12px;
+  background-image:-o-gradient(linear, left top, left bottom, color-stop(0, #fefefe), color-stop(0.49, #dddddd), color-stop(0.51, #d1d1d1), color-stop(1, #a1a1a1) );
+}
+.navbar input::slider-thumb{
+  appearance:none;
+  width:12px; height:12px;
+  border-radius:12px;
+  background-image:gradient(linear, left top, left bottom, color-stop(0, #fefefe), color-stop(0.49, #dddddd), color-stop(0.51, #d1d1d1), color-stop(1, #a1a1a1) );
 }
 /*-------------------- RESULT ------------------------------------------------*/
 table.stats {

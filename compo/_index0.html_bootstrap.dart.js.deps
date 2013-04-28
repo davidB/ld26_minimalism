@@ -165,6 +165,14 @@ file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/bot_web/src/bot_ht
 file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/ld48/ld48.dart
 file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/logging/logging.dart
 file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/meta/meta.dart
+file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/simple_audio/simple_audio.dart
+file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/simple_audio/simple_audio/audio_clip.dart
+file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/simple_audio/simple_audio/audio_manager.dart
+file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/simple_audio/simple_audio/audio_music.dart
+file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/simple_audio/simple_audio/audio_sfxr.dart
+file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/simple_audio/simple_audio/audio_snapshot.dart
+file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/simple_audio/simple_audio/audio_sound.dart
+file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/simple_audio/simple_audio/audio_source.dart
 file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/web_ui/observe.dart
 file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/web_ui/observe/list.dart
 file:///home/dwayne/dart/ld48/ld48_master/target/web/packages/web_ui/observe/map.dart
