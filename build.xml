@@ -99,6 +99,9 @@
     <delete includeemptydirs="true">
       <fileset dir="${target}/web" includes="*.dart,*.dart.map"/>
     </delete>
+    <delete includeemptydirs="true">
+      <fileset dir="${target}/web" includes="**/out" followsymlinks="false"/>
+    </delete>
     <!-- keep browser/dart.js : required by js-interop -->
     <mkdir dir="${target}/web/packages"/>
     <copy todir="${target}/web/packages/browser">
@@ -108,5 +111,18 @@
 
   <target name="deploy0" depends="js, insert_ga, remove_packages"/>
   <target name="deploy" depends="deploy0">
+  	<echo file="target/publish-site.sh">
+				#!/bin/sh
+				cd ${basedir}/../gh-pages
+				git checkout gh-pages
+				git pull
+				mkdir compo
+				cp -fr ${basedir}/target/web/. compo
+				git add compo
+				git commit -a -m "publish reports to gh-pages"
+				git push -u origin gh-pages
+		</echo>
+		<chmod perm="+x" file="target/publish-site.sh"/>
+		<exec executable="target/publish-site.sh" failonerror="true" failifexecutionfails="true"/>  
   </target>
 </project>
