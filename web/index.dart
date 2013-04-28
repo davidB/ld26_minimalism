@@ -19,6 +19,14 @@ var pFastest;
 
 var pSlowest;
 
+@observable
+get score {
+  if (player1 == null) return 0;
+  while (!pSlowest.isFinished && !pFastest.isFinished){
+    tryAbbrev('');
+  }
+  return math.max(0, pSlowest.nbStep - player1.nbStep) * 100 /math.max(1, pFastest.nbStep - pSlowest.nbStep);
+}
 /**
  * Learn about the Web UI package by visiting
  * http://www.dartlang.org/articles/dart-web-components/.
@@ -50,8 +58,9 @@ bool tryAbbrev([String k]) {
       el.style.display = "none";
     });
   }
-  //query("#${pFastest.id}").style.left = pFastest.percent;
-  //query("#${pSlowest.id}").style.left = pSlowest.percent;
+  if (player1.isFinished) {
+    print("score: ${score}");
+  }
   return false;
 }
 
