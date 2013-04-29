@@ -2094,6 +2094,9 @@ $$.JSString = {"": "Interceptor;",
       throw $.wrapException($.ArgumentError$(other));
     return receiver + other;
   },
+  concat$1: function(receiver, other) {
+    return this.$add(receiver, other);
+  },
   endsWith$1: function(receiver, other) {
     var otherLength, t1;
     otherLength = other.length;
@@ -2239,9 +2242,19 @@ $$._CodeUnits = {"": "UnmodifiableListBase;_string",
 
 $$._Random = {"": "Object;",
   nextInt$1: function(max) {
+    if (typeof max !== "number")
+      return this.nextInt$1$bailout(1, max);
     if (max < 0)
       throw $.wrapException($.ArgumentError$("negative max: " + $.S(max)));
     if (max > 4294967295)
+      max = 4294967295;
+    return Math.random() * max >>> 0;
+  },
+  nextInt$1$bailout: function(state0, max) {
+    var t1 = $.getInterceptor$n(max);
+    if (t1.$lt(max, 0))
+      throw $.wrapException($.ArgumentError$("negative max: " + $.S(max)));
+    if (t1.$gt(max, 4294967295))
       max = 4294967295;
     return Math.random() * max >>> 0;
   },
@@ -6242,6 +6255,9 @@ $$._LocationWrapper = {"": "Object;_ptr",
   set$href: function(_, value) {
     $._LocationWrapper__set(this._ptr, "href", value);
   },
+  get$pathname: function(_) {
+    return $._LocationWrapper__get(this._ptr, "pathname");
+  },
   toString$0: function(_) {
     return this._ptr.toString();
   },
@@ -6252,9 +6268,9 @@ $$._LocationWrapper = {"": "Object;_ptr",
 $$.FixedSizeListIterator = {"": "Object;_array,_length,_position,_current",
   moveNext$0: function() {
     var nextPosition, t1;
-    nextPosition = $.$add$ns(this._position, 1);
+    nextPosition = this._position + 1;
     t1 = this._length;
-    if ($.$lt$n(nextPosition, t1)) {
+    if (nextPosition < t1) {
       this._current = $.$index$asx(this._array, nextPosition);
       this._position = nextPosition;
       return true;
@@ -6574,16 +6590,27 @@ $$._reset0__anon = {"": "Closure;r_0",
   $isFunction: true
 };
 
-$$.newAudioManager_anon = {"": "Closure;audioManager_0,musicClip_1",
-  call$1: function(_) {
+$$.newAudioManager_anon = {"": "Closure;audioManager_0",
+  call$1: function(m) {
     var t1, t2;
-    $.Primitives_printString("music loaded");
     t1 = this.audioManager_0;
     t2 = t1.get$music();
-    t2.set$clip(t2, this.musicClip_1);
+    t2.set$clip(t2, m);
     t1 = t1.get$music();
     t1.play$0(t1);
-    $.Primitives_printString("music playing");
+  },
+  $isFunction: true
+};
+
+$$.newAudioManager_anon0 = {"": "Closure;audioManager_1",
+  call$0: function() {
+    var i, clipUrl, clip, t1;
+    for (i = 0, t1 = this.audioManager_1; $.$lt$n(i, $.get$length$asx($.get$snddefs())); i = $.$add$ns(i, 1)) {
+      clipUrl = $.JSString_methods.concat$1("sfxr:", $.$index$asx($.get$snddefs(), i));
+      clip = t1.makeClip$2("sound" + $.S(i), clipUrl);
+      $.load$0$x(clip);
+      $.sndNb = $.$add$ns($.sndNb, 1);
+    }
   },
   $isFunction: true
 };
@@ -7527,6 +7554,31 @@ $$.AudioManager = {"": "Object;_context,_destination,_listener,_masterGain,_musi
     t1.$indexSet(t1, $name, source);
     return source;
   },
+  playClipFromSource$3: function(sourceName, clipName, looped) {
+    return this.playClipFromSourceIn$4(0, sourceName, clipName, looped);
+  },
+  playClipFromSource$2: function(sourceName, clipName) {
+    return this.playClipFromSource$3(sourceName, clipName, false);
+  },
+  playClipFromSourceIn$4: function(delay, sourceName, clipName, looped) {
+    var t1, source, clip;
+    t1 = this._sources;
+    source = t1.$index(t1, sourceName);
+    if (source == null) {
+      $.Primitives_printString("Could not find source " + sourceName);
+      return;
+    }
+    t1 = this._clips;
+    clip = t1.$index(t1, clipName);
+    if (clip == null) {
+      $.Primitives_printString("Could not find clip " + clipName);
+      return;
+    }
+    if (looped)
+      return source.playLoopedIn$2(delay, clip);
+    else
+      return source.playOnceIn$2(delay, clip);
+  },
   AudioManager$1: function(baseURL) {
     this._context = $.AudioContext_AudioContext();
     this._destination = this._context.destination;
@@ -8070,6 +8122,80 @@ $$.AudioSound = {"": "Object;_liblib11$_source,_clip,_loop,_sourceNode,_pausedTi
     this._sourceNode.loop = this._loop;
     this._sourceNode.connect(t1._gainNode, 0, 0);
   },
+  set$pause: function(_, b) {
+    if (b === true) {
+      if (this._pausedTime != null)
+        return;
+      this._pause$0();
+    } else {
+      if (this._pausedTime == null)
+        return;
+      this._resume$0();
+    }
+  },
+  _computePausedTime$0: function() {
+    var now, t1, delta;
+    now = this._liblib11$_source._manager._context.currentTime;
+    t1 = $.getInterceptor$n(now);
+    delta = t1.$sub(now, this._startTime);
+    if (t1.$lt(now, this._scheduledTime))
+      return t1.$sub(now, this._scheduledTime);
+    if (this._loop) {
+      t1 = this._sourceNode.buffer.duration;
+      if (typeof t1 !== "number")
+        throw $.iae(t1);
+      return $.JSNumber_methods.$mod(delta, t1);
+    }
+    return delta;
+  },
+  _pause$0: function() {
+    if (this._startTime == null)
+      return;
+    $.Primitives_printString("Sound.pause");
+    var t1 = this._sourceNode;
+    if (t1 != null)
+      $.Primitives_printString($.S(t1.playbackState));
+    if (this._sourceNode != null) {
+      this._pausedTime = this._computePausedTime$0();
+      t1 = this._sourceNode;
+      if (t1 != null)
+        $.stop$1$x(t1, 0);
+      this._sourceNode = null;
+      $.Primitives_printString("paused at " + $.S(this._pausedTime));
+    }
+  },
+  _resume$0: function() {
+    var t1, t2, t3, t4;
+    if (this._pausedTime == null)
+      return;
+    $.Primitives_printString("Sound.resume");
+    t1 = this._sourceNode;
+    if (t1 != null)
+      $.Primitives_printString($.S(t1.playbackState));
+    this._setupSourceNodeForPlayback$0();
+    t1 = $.$lt$n(this._pausedTime, 0);
+    t2 = this._pausedTime;
+    t3 = this._liblib11$_source;
+    if (t1) {
+      this._pausedTime = $.$negate$n(t2);
+      $.Primitives_printString("Scheduling to play sound in " + $.S(this._pausedTime) + ".");
+      t1 = t3._manager;
+      this._scheduledTime = $.$add$ns(t1._context.currentTime, this._pausedTime);
+      t2 = this._sourceNode;
+      $.start$3$x(t2, this._scheduledTime, 0, t2.buffer.duration);
+      this._startTime = t1._context.currentTime;
+    } else {
+      $.Primitives_printString("Starting to play at offset " + $.S(t2));
+      t1 = t3._manager;
+      this._scheduledTime = t1._context.currentTime;
+      t2 = this._sourceNode;
+      t3 = this._scheduledTime;
+      t4 = this._pausedTime;
+      $.start$3$x(t2, t3, t4, $.$sub$n(t2.buffer.duration, t4));
+      this._startTime = $.$sub$n(t1._context.currentTime, this._pausedTime);
+    }
+    this._pausedTime = null;
+  },
   play$1: function(_, when) {
     var t1 = this._sourceNode;
     if (t1 != null)
@@ -8142,6 +8268,23 @@ $$.AudioSource = {"": "Object;_manager<,_name,_output,_gainNode,_panNode,_sounds
       this.set$volume(this, t1);
       this._mutedVolume = null;
     }
+  },
+  playOnceIn$2: function(delay, clip) {
+    var sound = $.AudioSound$_internal(this, clip, false);
+    $.add$1$ax(this._sounds, sound);
+    sound.play$1(sound, delay);
+    sound.set$pause(sound, this.get$pause(this));
+    return sound;
+  },
+  playLoopedIn$2: function(delay, clip) {
+    var sound = $.AudioSound$_internal(this, clip, true);
+    $.add$1$ax(this._sounds, sound);
+    sound.play$1(sound, delay);
+    sound.set$pause(sound, this.get$pause(this));
+    return sound;
+  },
+  get$pause: function(_) {
+    return this._isPaused;
   },
   get$x: function(_) {
     return this._x;
@@ -9595,7 +9738,7 @@ $$._WorkerStub = {"": "Interceptor;",
 
 $$._HTMLElement = {"": "Element;"};
 
-$$.AnchorElement = {"": "Element;hash%,href%,target=,type=",
+$$.AnchorElement = {"": "Element;hash%,href%,pathname=,target=,type=",
   toString$0: function(receiver) {
     return receiver.toString();
   }
@@ -9603,7 +9746,7 @@ $$.AnchorElement = {"": "Element;hash%,href%,target=,type=",
 
 $$.AnimationEvent = {"": "Event;"};
 
-$$.AreaElement = {"": "Element;hash=,href%,target="};
+$$.AreaElement = {"": "Element;hash=,href%,pathname=,target="};
 
 $$.ArrayBuffer = {"": "Interceptor;"};
 
@@ -10231,7 +10374,7 @@ $$.LegendElement = {"": "Element;"};
 
 $$.LinkElement = {"": "Element;href%,type="};
 
-$$.Location = {"": "Interceptor;hash%,href%",
+$$.Location = {"": "Interceptor;hash%,href%,pathname=",
   toString$0: function(receiver) {
     return receiver.toString();
   },
@@ -14399,6 +14542,10 @@ $.tryAbbrev = function() {
     t2 = ".abb_" + $.S($.get$id$x(a));
     t2 = $.queryAll$1$x(document, t2);
     t2.forEach$1(t2, new $.tryAbbrev_anon());
+  } else {
+    t2 = $._audioManager;
+    if (t2 != null)
+      t2.playClipFromSource$2("Source A", "sound" + $.get$rHide().nextInt$1($.sndNb));
   }
   if (t1) {
     if ($.observeReads() === true)
@@ -14484,7 +14631,7 @@ $._finish = function() {
 
 $.findBaseUrl = function() {
   var $location, t1, slashIndex;
-  $location = $.get$href$x($.get$location$x(window));
+  $location = $.get$pathname$x($.get$location$x(window));
   t1 = $.getInterceptor$asx($location);
   slashIndex = t1.lastIndexOf$1($location, "/");
   if ($.$lt$n(slashIndex, 0))
@@ -14494,21 +14641,22 @@ $.findBaseUrl = function() {
 };
 
 $.newAudioManager = function() {
-  var audioManager, musicClip, source, clipUrl, clip, e, exception, t1;
+  var audioManager, musicClip, source, e, t1, milliseconds, exception;
   try {
     audioManager = $.AudioManager$($.findBaseUrl());
     audioManager.set$mute(false);
     audioManager.set$masterVolume(1);
-    audioManager.set$musicVolume(0.5);
+    audioManager.set$musicVolume(0.1);
     audioManager.set$sourceVolume(0.9);
-    musicClip = audioManager.makeClip$2("music", "music.ogg");
-    $.load$0$x(musicClip).then$1(new $.newAudioManager_anon(audioManager, musicClip));
-    $.Primitives_printString("music ....");
+    musicClip = audioManager.makeClip$2("music0", "music.ogg");
+    $.load$0$x(musicClip).then$1(new $.newAudioManager_anon(audioManager));
     source = audioManager.makeSource$1("Source A");
     source.set$positional(false);
-    clipUrl = "sfxr:" + "1,,0.0769,0.5058,0.3492,0.4109,,,,,,0.3014,0.5982,,,,,,1,,,,,0.5";
-    clip = audioManager.makeClip$2("coin_sound", clipUrl);
-    $.load$0$x(clip);
+    t1 = new $.newAudioManager_anon0(audioManager);
+    milliseconds = $.Duration_1000000.get$inMilliseconds();
+    if (milliseconds < 0)
+      milliseconds = 0;
+    $.TimerImpl$(milliseconds, t1);
     return audioManager;
   } catch (exception) {
     t1 = $.unwrapException(exception);
@@ -15628,11 +15776,12 @@ $.C_NullThrownError = new $.NullThrownError();
 $.JSArray_methods = $.JSArray.prototype;
 $.JSDouble_methods = $.JSDouble.prototype;
 $.C_EmptyIterator = new $.EmptyIterator();
-$.EventStreamProvider_load = new $.EventStreamProvider("load");
+$.Duration_1000000 = new $.Duration(1000000);
 $.Orientation_horizontal = new $.Orientation("horizontal");
 $.ShowHideAction_show = new $.ShowHideAction("show");
 $.ShowHideResult_animated = new $.ShowHideResult("animated");
 $.EventStreamProvider_input = new $.EventStreamProvider("input");
+$.EventStreamProvider_load = new $.EventStreamProvider("load");
 $.ShowHideAction_hide = new $.ShowHideAction("hide");
 $.ShowHideAction_toggle = new $.ShowHideAction("toggle");
 $.VerticalAlignment_top = new $.VerticalAlignment("top");
@@ -15673,6 +15822,7 @@ $._bonusPlayed = -1;
 $._bonusTimer = null;
 $.__$category = "";
 $._audioManager = null;
+$.sndNb = 0;
 $.Observable_$_nextHashCode = 0;
 $._activeObserver = null;
 $.circularNotifyLimit = 100;
@@ -15936,6 +16086,9 @@ $.get$parent$x = function(receiver) {
 $.get$parentNode$x = function(receiver) {
   return $.getInterceptor$x(receiver).get$parentNode(receiver);
 };
+$.get$pathname$x = function(receiver) {
+  return $.getInterceptor$x(receiver).get$pathname(receiver);
+};
 $.get$remove$ax = function(receiver) {
   return $.getInterceptor$ax(receiver).get$remove(receiver);
 };
@@ -16122,6 +16275,9 @@ $.split$1$s = function(receiver, a0) {
 $.start$1$x = function(receiver, a0) {
   return $.getInterceptor$x(receiver).start$1(receiver, a0);
 };
+$.start$3$x = function(receiver, a0, a1, a2) {
+  return $.getInterceptor$x(receiver).start$3(receiver, a0, a1, a2);
+};
 $.startsWith$1$s = function(receiver, a0) {
   return $.getInterceptor$s(receiver).startsWith$1(receiver, a0);
 };
@@ -16300,6 +16456,9 @@ Isolate.$lazy($, "__$categories", "__$categories", "get$__$categories", function
 });
 Isolate.$lazy($, "_abbrevsOfCategory", "_abbrevsOfCategory", "get$_abbrevsOfCategory", function() {
   return $.Future_Future$value($.List_List($, null), null);
+});
+Isolate.$lazy($, "snddefs", "snddefs", "get$snddefs", function() {
+  return ["1,,0.0769,0.5058,0.3492,0.4109,,,,,,0.3014,0.5982,,,,,,1,,,,,0.5", "0,,0.0304,0.5968,0.3597,0.4033,,,,,,0.5875,0.5816,,,,,,1,,,,,0.5", "0,,0.01,0.425,0.4598,0.725,,,,,,0.2781,0.5226,,,,,,1,,,,,0.5", "0,,0.0853,0.3454,0.4048,0.6396,,,,,,0.5753,0.5561,,,,,,1,,,,,0.5", "0,,0.1088,,0.1969,0.2376,,0.3673,,,,,,0.5446,,0.4156,,,1,,,,,0.5", "0,,0.25,,0.4908,0.3207,,0.3852,,,,,,0.3595,,0.6301,,,1,,,,,0.5", "1,,0.2849,,0.1339,0.4261,,0.4938,,,,,,,,0.6863,,,1,,,,,0.5", "3,,0.3245,0.5047,0.3143,0.0547,,0.2659,,,,,,,,,,,1,,,,,0.5", "0,,0.3341,,0.1518,0.42,,0.2433,,,,,,0.1835,,,,,0.5469,,,0.0103,,0.5", "0,,0.1091,,0.2994,0.5632,,0.1088,,,,,,0.3084,,,,,0.8766,,,,,0.5", "0,,0.0746,,0.3832,0.4597,,0.3346,,,,,,0.1457,,0.5706,,,1,,,,,0.5", "0,,0.0746,,0.3832,0.4597,,0.3346,,,,,,0.1457,,0.5706,,,1,,,,,0.5"];
 });
 Isolate.$lazy($, "__shadowTemplate", "XDropdown___shadowTemplate", "get$XDropdown___shadowTemplate", function() {
   return $.DocumentFragment_DocumentFragment$html("        <content></content>\n      ");
