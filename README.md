@@ -1,4 +1,6 @@
-This was my first participation to [Ludum Dare LD26(compo)](http://www.ludumdare.com/compo/ludum-dare-26/?action=preview&uid=20693)
+This was my first participation to [Ludum Dare](http://www.ludumdare.com/) :
+
+*[AbbrevsMaster - davidB - 48 Hour Compo Entry](http://www.ludumdare.com/compo/ludum-dare-26/?action=preview&uid=20693)*
 
 The Game
 ========
