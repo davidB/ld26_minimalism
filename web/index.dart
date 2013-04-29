@@ -79,7 +79,9 @@ void main() {
     pFastest = new PlayerIA("pFastest");
     pSlowest = new PlayerIA("pSlowest");
     _setupRoutes();
-    _audioManager = newAudioManager();
+    //new Timer(const Duration(), () {
+      _audioManager = newAudioManager();
+    //});
   //});
 }
 void _setupRoutes() {
@@ -124,6 +126,8 @@ bool tryAbbrev() {
       abbrevEl.classes.remove("show0");
       abbrevEl.classes.add("hide${rHide.nextInt(6)}");
     });
+  } else {
+    playCoinSound();
   }
   lastStepText = (a == null)? "'${abbrev}' not found = +0":"'${a.long}' x ${a.nbOccurences} = +${a.score}";
   abbrev = '';
@@ -206,7 +210,7 @@ _finish() {
 }
 
 String findBaseUrl() {
-  String location = window.location.href;
+  String location = window.location.pathname;
   int slashIndex = location.lastIndexOf('/');
   if (slashIndex < 0) {
     return '/';
@@ -215,28 +219,43 @@ String findBaseUrl() {
   }
 }
 
+var snddefs = [
+   "1,,0.0769,0.5058,0.3492,0.4109,,,,,,0.3014,0.5982,,,,,,1,,,,,0.5",
+   "0,,0.0304,0.5968,0.3597,0.4033,,,,,,0.5875,0.5816,,,,,,1,,,,,0.5",
+   "0,,0.01,0.425,0.4598,0.725,,,,,,0.2781,0.5226,,,,,,1,,,,,0.5",
+   "0,,0.0853,0.3454,0.4048,0.6396,,,,,,0.5753,0.5561,,,,,,1,,,,,0.5",
+   "0,,0.1088,,0.1969,0.2376,,0.3673,,,,,,0.5446,,0.4156,,,1,,,,,0.5",
+   "0,,0.25,,0.4908,0.3207,,0.3852,,,,,,0.3595,,0.6301,,,1,,,,,0.5",
+   "1,,0.2849,,0.1339,0.4261,,0.4938,,,,,,,,0.6863,,,1,,,,,0.5",
+   "3,,0.3245,0.5047,0.3143,0.0547,,0.2659,,,,,,,,,,,1,,,,,0.5",
+   "0,,0.3341,,0.1518,0.42,,0.2433,,,,,,0.1835,,,,,0.5469,,,0.0103,,0.5",
+   "0,,0.1091,,0.2994,0.5632,,0.1088,,,,,,0.3084,,,,,0.8766,,,,,0.5",
+   "0,,0.0746,,0.3832,0.4597,,0.3346,,,,,,0.1457,,0.5706,,,1,,,,,0.5",
+   "0,,0.0746,,0.3832,0.4597,,0.3346,,,,,,0.1457,,0.5706,,,1,,,,,0.5"
+];
+var sndNb = 0;
 newAudioManager() {
 	try {
 		var audioManager = new AudioManager(findBaseUrl());
 		audioManager.mute = false;
 		audioManager.masterVolume = 1.0;
-		audioManager.musicVolume = 0.5;
+		audioManager.musicVolume = 0.1;
 		audioManager.sourceVolume = 0.9;
-		AudioClip musicClip = audioManager.makeClip('music', 'music.ogg');
-		musicClip.load().then((_) {
-			print("music loaded");
-			audioManager.music.clip = musicClip;
+		AudioClip musicClip = audioManager.makeClip('music0', 'music.ogg');
+		musicClip.load().then((m) {
+			audioManager.music.clip = m;
 			audioManager.music.play();
-			print("music playing");
 		});
-		print("music ....");
-	
 		AudioSource source = audioManager.makeSource('Source A');
 		source.positional = false;
-	
-		var clipUrl = AudioClip.SFXR_PREFIX.concat('1,,0.0769,0.5058,0.3492,0.4109,,,,,,0.3014,0.5982,,,,,,1,,,,,0.5');
-		AudioClip clip = audioManager.makeClip('coin_sound', clipUrl);
-		clip.load();
+    new Timer(const Duration(seconds: 1), () {
+      for(var i = 0; i < snddefs.length; i++) {
+  		  var clipUrl = AudioClip.SFXR_PREFIX.concat(snddefs[i]);
+  		  AudioClip clip = audioManager.makeClip('sound${i}', clipUrl);
+  		  clip.load();
+  		  sndNb++;
+      }
+    });
 		return audioManager;
   } catch (e) {
   	print(e);
@@ -245,5 +264,5 @@ newAudioManager() {
 }
 
 playCoinSound() {
-  _audioManager.playClipFromSource('Source A', 'coin_sound');
+  if (_audioManager != null) _audioManager.playClipFromSource('Source A', 'sound${rHide.nextInt(sndNb)}');
 }
