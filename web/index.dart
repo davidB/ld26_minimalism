@@ -56,14 +56,14 @@ AudioManager _audioManager = null;
 //var _worldRenderSystem;
 //var _hudRenderSystem;
 
-get masterMute => _audioManager.mute;
-set masterMute(v) {_audioManager.mute = v; }
-get masterVolume => _audioManager.masterVolume.toString();
-set masterVolume(v) { _audioManager.masterVolume = double.parse(v) ; }
-get musicVolume => _audioManager.musicVolume.toString();
-set musicVolume(v) { _audioManager.musicVolume = double.parse(v) ; }
-get sourceVolume => _audioManager.sourceVolume.toString();
-set sourceVolume(v) { _audioManager.sourceVolume = double.parse(v) ; }
+get masterMute => _audioManager == null ? "0" : _audioManager.mute;
+set masterMute(v) {if (_audioManager == null) return; _audioManager.mute = v; }
+get masterVolume => _audioManager == null ? "0" :_audioManager.masterVolume.toString();
+set masterVolume(v) { if (_audioManager == null) return; _audioManager.masterVolume = double.parse(v) ; }
+get musicVolume => _audioManager == null ? "0" :_audioManager.musicVolume.toString();
+set musicVolume(v) { if (_audioManager == null) return; _audioManager.musicVolume = double.parse(v) ; }
+get sourceVolume => _audioManager == null ? "0" : _audioManager.sourceVolume.toString();
+set sourceVolume(v) { if (_audioManager == null) return; _audioManager.sourceVolume = double.parse(v) ; }
 //get scoreR {
 //  return math.max(0, pSlowest.nbStep - player1.nbStep) * 100 /math.max(1, pFastest.nbStep - pSlowest.nbStep);
 //}
@@ -216,27 +216,32 @@ String findBaseUrl() {
 }
 
 newAudioManager() {
-  var audioManager = new AudioManager(findBaseUrl());
-  audioManager.mute = false;
-  audioManager.masterVolume = 1.0;
-  audioManager.musicVolume = 0.5;
-  audioManager.sourceVolume = 0.9;
-  AudioClip musicClip = audioManager.makeClip('music', 'music.ogg');
-  musicClip.load().then((_) {
-    print("music loaded");
-    audioManager.music.clip = musicClip;
-    audioManager.music.play();
-    print("music playing");
-  });
-  print("music ....");
-
-  AudioSource source = audioManager.makeSource('Source A');
-  source.positional = false;
-
-  var clipUrl = AudioClip.SFXR_PREFIX.concat('1,,0.0769,0.5058,0.3492,0.4109,,,,,,0.3014,0.5982,,,,,,1,,,,,0.5');
-  AudioClip clip = audioManager.makeClip('coin_sound', clipUrl);
-  clip.load();
-  return audioManager;
+	try {
+		var audioManager = new AudioManager(findBaseUrl());
+		audioManager.mute = false;
+		audioManager.masterVolume = 1.0;
+		audioManager.musicVolume = 0.5;
+		audioManager.sourceVolume = 0.9;
+		AudioClip musicClip = audioManager.makeClip('music', 'music.ogg');
+		musicClip.load().then((_) {
+			print("music loaded");
+			audioManager.music.clip = musicClip;
+			audioManager.music.play();
+			print("music playing");
+		});
+		print("music ....");
+	
+		AudioSource source = audioManager.makeSource('Source A');
+		source.positional = false;
+	
+		var clipUrl = AudioClip.SFXR_PREFIX.concat('1,,0.0769,0.5058,0.3492,0.4109,,,,,,0.3014,0.5982,,,,,,1,,,,,0.5');
+		AudioClip clip = audioManager.makeClip('coin_sound', clipUrl);
+		clip.load();
+		return audioManager;
+  } catch (e) {
+  	print(e);
+  	return null;
+  }
 }
 
 playCoinSound() {
