@@ -8,3 +8,5 @@ dependencies:
   web_ui: any
   widget:
     git: git://github.com/kevmoo/widget.dart.git
+  simple_audio:
+    path: ../../simpleaudio
