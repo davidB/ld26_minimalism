@@ -15,9 +15,9 @@ Points : definition's length x number of occurences.
 
 Mainly tested on Chromium & Firefox
 
-* [Play Compo](http://davidB.github.io/ld48_minimalism/compo)
+* [Play Compo](http://davidB.github.io/ld26_minimalism/compo)
 * [Ludum Dare entry](http://www.ludumdare.com/compo/ludum-dare-26/?action=preview&uid=20693)
-* [Source](https://github.com/davidB/ld48_minimalism/)
+* [Source](https://github.com/davidB/ld26_minimalism/)
 
 [![in game](http://www.ludumdare.com/compo/wp-content/compo2/thumb/1c55c39e497c33d6c4442262e1bf66a1.jpg)](http://www.ludumdare.com/compo/wp-content/compo2/233892/20693-shot0.jpg)
 [![categories](http://www.ludumdare.com/compo/wp-content/compo2/thumb/6668934daa3169667d51e68ee77f9505.jpg)](http://www.ludumdare.com/compo/wp-content/compo2/233892/20693-shot1.jpg)
